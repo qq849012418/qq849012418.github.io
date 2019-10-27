@@ -104,8 +104,8 @@ gitment:
 gitalk:
     owner: qq849012418
     repo: blog-comments
-    clientID: 
-    clientSecret: 
+    clientID: 6c2b1ee2c9cb49a89ed0
+    clientSecret: 305120a30d1782f2cf2bfe88c931769900f5598d
 # 在使用其它评论组件时可点击显示 Disqus
 lazy_load_disqus : false
 
@@ -121,6 +121,6 @@ simple_jekyll_search:
 # ---------------- #
 #    Analytics     #
 # ---------------- #
-#后两行暂未配置，故注释
-#google:
-#    analytics_id: UA-80669434-1
+#后两行暂未配置
+google:
+    analytics_id: UA-80669434-1
