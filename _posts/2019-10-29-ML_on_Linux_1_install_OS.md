@@ -1,4 +1,3 @@
-```
 ---
 layout: post
 title: 从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统
@@ -6,8 +5,6 @@ categories: Linux
 description: 将 Excel 里的数据使用 VBA 导入 Word 表格中。
 keywords: linux, windows, ununtu, ssd
 ---
-```
-
 #  从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统
 
 > ## 有一说一.JPG
