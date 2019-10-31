@@ -36,17 +36,17 @@ keywords: linux, windows, ununtu, ssd
 
 如图，双击iso打开，选择启动→写入硬盘镜像→写入，ok。
 
-![image-20191029102616165](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/image-20191029102616165.png)
+![image-20191029102616165](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029102616165.png)
 
-![image-20191029104520402](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/image-20191029104520402.png)
+![image-20191029104520402](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029104520402.png)
 
 打开DiskGenius，右击新u盘，点击建立新分区，调整分区空间（分大点）
 
-![image-20191029105617040](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/image-20191029105617040.png)
+![image-20191029105617040](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029105617040.png)
 
 在新分区上右键选择格式化，格式化成ext4格式（适用于linux系统备份）。
 
-![image-20191029105844236](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/image-20191029105844236.png)
+![image-20191029105844236](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029105844236.png)
 
 至此，u盘预处理完毕，484很简单（
 
@@ -84,9 +84,9 @@ keywords: linux, windows, ununtu, ssd
 
 进入系统后，如果后面不需要跑cuda，在“软件和更新-附加驱动”中选择推荐的nvidia驱动下载安装。若找不到驱动，试一试切换下载源，然后sudo apt-get update一波。
 
-![2019-10-31 00-46-19 的屏幕截图](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+![2019-10-31 00-46-19 的屏幕截图](2019-10-29-ML_on_Linux_1_install_OS.assets/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
 
-![2019-10-31 00-46-19 的屏幕截图](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-1572454271471.png)
+![2019-10-31 00-46-19 的屏幕截图](2019-10-29-ML_on_Linux_1_install_OS.assets/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-1572454271471.png)
 
 装好nvidia，咱也不能放过默认的显卡驱动nouveau。根据文献4，我们做以下操作：
 
@@ -124,7 +124,7 @@ https://blog.csdn.net/weixin_41762173/article/details/79480609
 
 emm庆祝一下
 
-![2019-10-31 01-02-38 的屏幕截图](2019-10-29-ML%20on%20Linux%201%20-%20install%20OS.assets/2019-10-31%2001-02-38%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+![2019-10-31 01-02-38 的屏幕截图](2019-10-29-ML_on_Linux_1_install_OS.assets/2019-10-31%2001-02-38%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
 
 万事开头难
 
