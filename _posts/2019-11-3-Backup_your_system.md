@@ -26,7 +26,7 @@ sudo apt-get install gparted
 
 ### 分区
 
-![gparted](2019-11-3-Backup_your_system.assets/gparted.png)
+![gparted](https://qq849012418.github.io/images/posts/linux/gparted.png)
 
 如此分个区，空间要大，确保能装下整个系统。
 
@@ -50,7 +50,7 @@ sudo apt install timeshift
 
 选择刚才创建的u盘分区，并把home和root，boot等都包含进备份的需求中，创建快照即可。
 
-![snapshot](2019-11-3-Backup_your_system.assets/snapshot.png)
+![snapshot](https://qq849012418.github.io/images/posts/linux/snapshot.png)
 
 至此，本系列正式结束，后续视情况，会更新一些新的内容。
 
