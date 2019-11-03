@@ -32,11 +32,9 @@ keywords: linux, windows, ununtu, ssd
 
 参考了文献1，采用UltraISO，搜索下载试用即可。
 
-### 分区工具
 
-采用常见的~~dick~~DiskGenius，目的是方便后续系统装完所有东西后可以备份到u盘里，先给u盘分个区。这个思想参考了文献2，但工具与其不同。
 
-## 2.启动盘制作与分区
+## 2.启动盘制作
 
 如图，双击iso打开，选择启动→写入硬盘镜像→写入，ok。
 
@@ -44,19 +42,13 @@ keywords: linux, windows, ununtu, ssd
 
 ![image-20191029104520402](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029104520402.png)
 
-打开DiskGenius，右击新u盘，点击建立新分区，调整分区空间（分大点）
 
-![image-20191029105617040](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029105617040.png)
-
-在新分区上右键选择格式化，格式化成ext4格式（适用于linux系统备份）。
-
-![image-20191029105844236](2019-10-29-ML_on_Linux_1_install_OS.assets/image-20191029105844236.png)
 
 至此，u盘预处理完毕，484很简单（
 
 对了，硬盘不需要预处理。
 
-## 4.BIOS的简单修改
+## 3.BIOS的简单修改
 
 开机进入boot，我的机械革命是按F2，其他品牌请百度。
 
@@ -66,7 +58,7 @@ keywords: linux, windows, ununtu, ssd
 
 保存重启，进入Linux grub界面，选择install ubuntu。
 
-## 5.系统安装
+## 4.系统安装
 
 说一些注意事项，参考文献3.
 
@@ -76,11 +68,11 @@ keywords: linux, windows, ununtu, ssd
 3. 引导文件放置的设备直接选到移动硬盘即可，不要选到下面的分区。
 4. 示意图：
 
-## 6.再次修改BIOS（该步骤还需优化）
+## 5.再次修改BIOS（该步骤还需优化）
 
 把硬盘中的第一位引导由windows boot manager改为ubuntu（可能会有两个ubuntu，一个是命令行，一个是图形化界面，选到图形化的那个）
 
-## 7.可能遇到的问题
+## 6.可能遇到的问题
 
 ### 有nvidia显卡的笔记本可能会卡在紫屏界面进不去桌面
 
@@ -124,7 +116,7 @@ keywords: linux, windows, ununtu, ssd
 
 https://blog.csdn.net/weixin_41762173/article/details/79480609
 
-## 8.成果
+## 7.成果
 
 emm庆祝一下
 
@@ -142,9 +134,8 @@ Keenster，写于2019.10.29-10.31
 
 # 参考文献
 
-[1]: https://blog.csdn.net/neptune4751/article/details/79146885	"win10下制作Ubuntu16.04的U盘安装盘"
-[2]: https://www.cnblogs.com/lemos/p/8297071.html	"linux 系统全盘备份"
-[3]: https://blog.csdn.net/weixin_44001854/article/details/84896333	"给移动硬盘装上LINUX全攻略"
-
-[4]: https://blog.csdn.net/qq805934132/article/details/82909759	"Ubuntu禁用nouveau驱动"
+- https://blog.csdn.net/neptune4751/article/details/79146885"win10下制作Ubuntu16.04的U盘安装盘"
+- https://www.cnblogs.com/lemos/p/8297071.html"linux 系统全盘备份"
+- https://blog.csdn.net/weixin_44001854/article/details/84896333"给移动硬盘装上LINUX全攻略"
+- https://blog.csdn.net/qq805934132/article/details/82909759"Ubuntu禁用nouveau驱动"
 
