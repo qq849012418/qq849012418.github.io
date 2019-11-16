@@ -142,3 +142,8 @@ cd torch2trt
 sudo python setup.py install
 ```
 
+
+
+## 8.装一些常用工具吧～
+
+deepin-wine: 参考https://gitee.com/wszqkzqk/deepin-wine-for-ubuntu即可。
