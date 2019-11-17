@@ -39,3 +39,33 @@ sudo apt-get install simplescreenrecorder
 
 
 
+## 2.多人/多系统协作需求
+
+### 与windows互传文件
+
+### winscp
+
+可在win端操作，有点像ftp的感觉，简洁大方的图形界面
+
+https://winscp.net/eng/docs/lang:chs
+
+linux端需要做的设置（参考https://blog.csdn.net/yangwangnndd/article/details/90676948）
+
+    首先更新源
+    
+    sudo apt-get update
+    
+    安装ssh服务
+    
+    sudo apt-get install openssh-server
+    
+    检测是否已启动
+    
+    ps -e | grep ssh
+    看到有ssh字样，说明已启动，如果没有就手动启动
+    /etc/init.d/ssh start
+    
+    配置ssh-server,配置文件位于/etc/ssh/sshd_config，默认端口为22，为了安全，一般自定义为其他端口，然后重启
+    
+    sudo /etc/init.d/ssh resart
+使用注意：两台电脑需要在同一局域网下。
