@@ -1,6 +1,6 @@
 ---
 layout: post
-title: (持续更新)-Linux实用小工具安装方法合集
+title: opencv3代码移植到opencv4环境下需要修改什么？
 categories:  OpenCV
 description: none
 keywords: opencv3, opencv4, RM
