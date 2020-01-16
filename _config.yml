@@ -4,8 +4,8 @@
 baseurl:
 url: https://qq849012418.github.io
 date_format: "ordinal"
-title: Keenster
-subtitle: "Coding改变人生"
+title: KeensteR.TecH
+subtitle: "只争朝夕，不负韶华"
 description: "锦阁的个人博客"
 keywords: Steven Wong, Keenster, Minazuki, qq849012418, 水无月
 timezone: Asia/Shanghai
@@ -16,8 +16,8 @@ side_bar_repo_limit: 5
 #      Author      #
 # ---------------- #
 author: Keenster
-organization: 
-organization_url: 
+organization: SJTU
+organization_url: https://qq849012418.github.io/
 github_username: qq849012418
 location: Shanghai, China
 email: MinazukiCn@qq.com
@@ -114,7 +114,7 @@ lazy_load_disqus : false
 # ---------------- #
 simple_jekyll_search:
     # 是否支持全文搜索
-    fulltext: false
+    fulltext: true
     # 最多显示多少条搜索结果
     limit: 10
 
