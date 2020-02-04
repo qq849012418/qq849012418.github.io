@@ -1,7 +1,7 @@
 # ---------------- #
 #   Main Configs   #
 # ---------------- #
-baseurl: https://keenster.gitee.io
+baseurl: 
 url: https://qq849012418.github.io
 date_format: "ordinal"
 title: KEENSTER.CN
@@ -124,3 +124,6 @@ simple_jekyll_search:
 #后两行暂未配置
 google:
     analytics_id: UA-156339178-1
+
+#个性化-百度统计
+baidu-analysis: a5d6b336220d3004eafb45d18b43fb2e
