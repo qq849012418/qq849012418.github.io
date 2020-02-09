@@ -48,7 +48,7 @@ https://github.com/opencv/opencv/archive/4.1.2.tar.gz
 
 https://github.com/opencv/opencv_contrib/archive/4.1.2.tar.gz
 
-创建opencv-4.1.2目录，将两个文件夹解压到这里，在创建一个build文件夹。
+创建opencv-4.1.2目录，将两个文件夹解压到这里，再创建一个build文件夹。
 
 （参考下面的博客进行camke-gui编译)
 
@@ -65,6 +65,10 @@ OPENCV-GENERATE-PKGCONFIG=ON
 CMAKE_INSTALL_PERFIX=/usr/local/opencv4
 
 OPENCV_EXTRA_MODULES_PATH=/你刚创建的opencv-4.1.2目录/opencv_contrib-4.1.2/modules
+
+[20200209更新] 如果你需要使用surf等nonfree模块，应多选这项
+
+OPENCV_ENABLE_NONFREE=ON
 
 环境配置见博客
 
