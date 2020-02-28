@@ -3,6 +3,7 @@
 # ---------------- #
 baseurl: 
 url: https://qq849012418.github.io
+cdnurl: https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io
 date_format: "ordinal"
 title: KEENSTER.CN
 subtitle: "只争朝夕，不负韶华"
