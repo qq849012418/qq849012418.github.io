@@ -63,7 +63,11 @@ keywords: github page, keenster.cn, http
 {{ site.cdnurl }}/assets/js/jquery-ui.js
 ```
 
+### 打开速度测试
 
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_143656.png)
+
+在家里秒开
 
 ### 可能出现的问题
 
