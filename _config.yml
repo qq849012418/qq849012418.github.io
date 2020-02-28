@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl: 
-url: https://qq849012418.github.io
+url: http://qq849012418.github.io
 cdnurl: https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io
 date_format: "ordinal"
 title: KEENSTER.CN
@@ -18,7 +18,7 @@ side_bar_repo_limit: 5
 # ---------------- #
 author: Keenster
 organization: SJTU
-organization_url: https://qq849012418.github.io/
+organization_url: http://qq849012418.github.io/
 github_username: qq849012418
 location: Shanghai, China
 email: MinazukiCn@qq.com
