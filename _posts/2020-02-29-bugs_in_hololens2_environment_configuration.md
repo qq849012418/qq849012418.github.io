@@ -1,13 +1,13 @@
 ---
 
 layout: post
-title: Hololens2入坑日志
+title: Hololens2 初探秘手册
 categories:  [AR, Debug]
 description: none
 keywords: hololens2, augmented reality
 ---
 
-走一步一个坑。
+微软Hololens 2是微软公司研发的混合现实头显。虽然现在还没货，但是可以研究一下。
 
 ------
 
@@ -47,9 +47,33 @@ https://docs.microsoft.com/zh-cn/hololens/hololens2-hardware
 
 https://docs.microsoft.com/en-us/windows/mixed-reality/using-the-hololens-emulator
 
+安装重点1：首先需要在控制面板-程序与功能-启用或关闭Windows功能-勾选Hyper-V，若看不到Hyper-V，可能是因为系统是家庭版本。解决方法是将以下代码保存为.cmd格式运行，之后按提示重启电脑。
+
+```shell
+pushd "%~dp0"
+dir /b %SystemRoot%\servicing\Packages\*Hyper-V*.mum >hyper-v.txt
+for /f %%i in ('findstr /i . hyper-v.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i"
+del hyper-v.txt
+Dism /online /enable-feature /featurename:Microsoft-Hyper-V-
+```
+
+重点2：BIOS中确认如果有以下的项，将其激活。
+
+```
+-Hardware-assisted virtualization
+-Second Level Address Translation (SLAT)
+-Hardware-based Data Execution Prevention (DEP)
+```
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/hololenstest1.png)
+
+emulator里的系统菜单可用F2打开。
+
+如何安装程序包：右侧进入Panel，里面有APP的部分，安装时注意要安装合适的Dependencies，比如这个模拟器好像是x64的，装其他比如ARM的框架会失败。
 
 
-##### 官方unity插件-MixedRealityToolkit的github页
+
+##### 官方unity插件-MixedRealityToolkit（MRTK）的github页
 
 https://github.com/microsoft/MixedRealityToolkit-Unity
 
@@ -59,11 +83,28 @@ https://github.com/microsoft/MixedRealityToolkit-Unity
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/mrtk_development/Documentation/README_ExampleHub.md
 
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/hololenstest02.png)
+
+不知道怎么调视角（
 
 
-#### 踩坑
+
+#### 开发踩坑
+
+##### unity导包后报错 Feature 'xxx' cannot be used because it is not part of the C# 4.0
+
+
 
 ##### vs 错误 将环境变量 " TraceDesignTime" 设置为 true 解决方案
 
 https://ourcodeworld.com/articles/read/414/visual-studio-2017-ide0006-compiler-error-encountered-while-loading-the-project
 
+
+
+
+
+#### 备用优秀教程
+
+##### Unity3D项目移植UWP平台踩坑经验总结
+
+https://zhuanlan.zhihu.com/p/63424435
