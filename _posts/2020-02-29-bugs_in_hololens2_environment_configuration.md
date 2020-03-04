@@ -35,9 +35,9 @@ keywords: hololens2, augmented reality
 
 
 
-#### 重要文档归类
+#### 重要文档归类及调试注意事项
 
-##### 官方对Hololens2和1的新手教程文档页面（非编程）
+##### 官方对Hololens2和1的新手教程文档页面（非编程，仅为原理和使用）
 
 https://docs.microsoft.com/zh-cn/hololens/hololens2-hardware
 
@@ -69,9 +69,27 @@ Dism /online /enable-feature /featurename:Microsoft-Hyper-V-
 
 emulator里的系统菜单可用F2打开。
 
+
+
 如何安装程序包：右侧进入Panel，里面有APP的部分，安装时注意要安装合适的Dependencies，比如这个模拟器好像是x64的，装其他比如ARM的框架会失败。
 
 
+
+如何将unity中的scene导出到hololens2 emulator 运行：
+
+首先打开build settings，按数字顺序进行设置，我的unity版本是2019.1.0a12. 注意，第一次点击“Universial Windows Platform”时，可能会需要提前安装 UnitySetup-Universal-Windows-Platform-Support-for-Editor-2019.1.0a12.exe 这个东西，否则不会出这个界面。然后要注意第一步设置一定要选择合适的版本，下面的那几个对号要打上，否则在vs中打开时不会提示使用simulator运行。
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174725.png)
+
+build出来之后，文件结构是这个样子的
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_175110.png)
+
+使用vs打开sln，然后就可以看到模拟器啦，直接点击模拟器，编译通过后就可以在上面跑程序啦
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174945.png)
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174424.png)
 
 ##### 官方unity插件-MixedRealityToolkit（MRTK）的github页
 
@@ -83,6 +101,8 @@ https://github.com/microsoft/MixedRealityToolkit-Unity
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/mrtk_development/Documentation/README_ExampleHub.md
 
+下图是官方的appbundle在emulator中的运行情况
+
 ![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/hololenstest02.png)
 
 不知道怎么调视角（
@@ -93,7 +113,9 @@ https://github.com/microsoft/MixedRealityToolkit-Unity/blob/mrtk_development/Doc
 
 ##### unity导包后报错 Feature 'xxx' cannot be used because it is not part of the C# 4.0
 
+https://blog.csdn.net/HarryXYC/article/details/89462647
 
+在Unity选择【Edit】——【Project Settings】——【Player】——【Other Settings】——【Configuration】大项下的【Scripting Runtime Version】选项选择【.NET 4.x Equivalent】即可解决问题。
 
 ##### vs 错误 将环境变量 " TraceDesignTime" 设置为 true 解决方案
 
@@ -108,3 +130,7 @@ https://ourcodeworld.com/articles/read/414/visual-studio-2017-ide0006-compiler-e
 ##### Unity3D项目移植UWP平台踩坑经验总结
 
 https://zhuanlan.zhihu.com/p/63424435
+
+
+
+本文章最后编辑于20200304
