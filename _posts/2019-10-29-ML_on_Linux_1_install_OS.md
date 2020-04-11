@@ -1,4 +1,5 @@
 ---
+
 layout: post
 title: 从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统
 categories: Linux
@@ -6,11 +7,9 @@ description: none
 keywords: linux, windows, ununtu, ssd
 ---
 
-第一个系列开始了。
+第一篇小文章。
 
 ------
-
-
 
 ## 0.有一说一.JPG
 
