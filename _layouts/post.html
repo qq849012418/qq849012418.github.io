@@ -13,7 +13,7 @@ layout: default
             <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
           </span>
           {% endif %}
-          <span id="{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}"> - </span>views.
+          &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
           {% for cat in page.categories %}
           <span class="meta-info">
             <span class="octicon octicon-file-directory"></span>
@@ -50,7 +50,7 @@ layout: default
 <!-- /section.content -->
 <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
 <script>
-    AV.initialize("wvdRJycSEV7b6ivcT1WPBfMS-gzGzoHsz", "JNo29ECDsk6hoIQHbEJKaGl3");
+    AV.initialize("wvdRJycSEV7b6ivcT1WPBfMS-gzGzoHsz","JNo29ECDsk6hoIQHbEJKaGl3");
     var name='Counter';
 
     function createRecord(Counter){
