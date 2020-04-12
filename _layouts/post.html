@@ -28,6 +28,31 @@ layout: default
     </div>
   </div>
 </div>
+
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    {{ content }}
+    </article>
+    <div class="share">
+      {% include sns-share.html %}
+    </div>
+    <div class="comment">
+      {% include comments.html %}
+    </div>
+  </div>
+  <div class="column one-fourth">
+    {% include sidebar-search.html %}
+    {% include sidebar-qrcode.html %}
+    {% include sidebar-post-nav.html %}
+  </div>
+</div>
+
+</section>
+<!-- /section.content -->
 <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
 <script>
     AV.initialize("wvdRJycSEV7b6ivcT1WPBfMS-gzGzoHsz","JNo29ECDsk6hoIQHbEJKaGl3");
@@ -115,27 +140,3 @@ layout: default
     });
 </script>
         
-</section>
-<!-- / .banner -->
-<section class="container content">
-<div class="columns">
-  <div class="column three-fourths" >
-    <article class="article-content markdown-body">
-    {{ content }}
-    </article>
-    <div class="share">
-      {% include sns-share.html %}
-    </div>
-    <div class="comment">
-      {% include comments.html %}
-    </div>
-  </div>
-  <div class="column one-fourth">
-    {% include sidebar-search.html %}
-    {% include sidebar-qrcode.html %}
-    {% include sidebar-post-nav.html %}
-  </div>
-</div>
-
-</section>
-<!-- /section.content -->
