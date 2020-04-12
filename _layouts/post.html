@@ -11,9 +11,10 @@ layout: default
           {% if page.date %}
           <span class="meta-info">
             <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
+            &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
           </span>
           {% endif %}
-          &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
+          
           {% for cat in page.categories %}
           <span class="meta-info">
             <span class="octicon octicon-file-directory"></span>
@@ -21,33 +22,7 @@ layout: default
           </span>
           {% endfor %}
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-<!-- / .banner -->
-<section class="container content">
-<div class="columns">
-  <div class="column three-fourths" >
-    <article class="article-content markdown-body">
-    {{ content }}
-    </article>
-    <div class="share">
-      {% include sns-share.html %}
-    </div>
-    <div class="comment">
-      {% include comments.html %}
-    </div>
-  </div>
-  <div class="column one-fourth">
-    {% include sidebar-search.html %}
-    {% include sidebar-qrcode.html %}
-    {% include sidebar-post-nav.html %}
-  </div>
-</div>
-</section>
-<!-- /section.content -->
+
 <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
 <script>
     AV.initialize("wvdRJycSEV7b6ivcT1WPBfMS-gzGzoHsz","JNo29ECDsk6hoIQHbEJKaGl3");
@@ -134,3 +109,31 @@ layout: default
       showCount(Counter);
     });
 </script>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    {{ content }}
+    </article>
+    <div class="share">
+      {% include sns-share.html %}
+    </div>
+    <div class="comment">
+      {% include comments.html %}
+    </div>
+  </div>
+  <div class="column one-fourth">
+    {% include sidebar-search.html %}
+    {% include sidebar-qrcode.html %}
+    {% include sidebar-post-nav.html %}
+  </div>
+</div>
+</section>
+<!-- /section.content -->
