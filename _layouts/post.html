@@ -11,7 +11,7 @@ layout: default
           {% if page.date %}
           <span class="meta-info">
             <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
-            &nbsp;<span id="{{ site.url }}{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}"> - </span>&nbsp;views
+            &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
           </span>
           {% endif %}
           
