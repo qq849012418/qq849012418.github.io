@@ -1,41 +1,6 @@
 ---
 layout: default
 ---
-<section class="collection-head small geopattern" data-pattern-id="{{ page.title | truncate: 15, ''}}">
-<div class="container">
-  <div class="columns">
-    <div class="column three-fourths">
-      <div class="collection-title">
-        <h1 class="collection-header">{{ page.title }}</h1>
-        <div class="collection-info">
-          {% if page.date %}
-          <span class="meta-info">
-            <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
-            &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
-          </span>
-          {% endif %}
-          
-          {% for cat in page.categories %}
-          <span class="meta-info">
-            <span class="octicon octicon-file-directory"></span>
-            <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
-          </span>
-          {% endfor %}
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-</div>
-
-</section>
-<!-- / .banner -->
-<section class="container content">
-<div class="columns">
-  <div class="column three-fourths" >
-    <article class="article-content markdown-body">
-    {{ content }}
     <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
     <script>
     AV.initialize("wvdRJycSEV7b6ivcT1WPBfMS-gzGzoHsz","JNo29ECDsk6hoIQHbEJKaGl3");
@@ -122,7 +87,41 @@ layout: default
       showCount(Counter);
     });
     </script>
-        
+<section class="collection-head small geopattern" data-pattern-id="{{ page.title | truncate: 15, ''}}">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">{{ page.title }}</h1>
+        <div class="collection-info">
+          {% if page.date %}
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
+            &nbsp;<span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
+          </span>
+          {% endif %}
+          
+          {% for cat in page.categories %}
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
+          </span>
+          {% endfor %}
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    {{ content }}    
     </article>
     <div class="share">
       {% include sns-share.html %}
