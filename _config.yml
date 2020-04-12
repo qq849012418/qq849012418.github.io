@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl: 
-url: "http://keenster.cn"
+url: http://keenster.cn
 cdnurl: https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io
 date_format: "ordinal"
 title: KEENSTER.CN
