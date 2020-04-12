@@ -46,7 +46,7 @@ comments: false
                     <p class="repo-list-meta">
                         <span class="meta-info">
                           <span class="octicon octicon-calendar"></span> {{ post.date | date: "%Y/%m/%d" }}
-                          &nbsp;<span id="{{ site.url }}{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}"> - </span>&nbsp;views
+                          &nbsp;<span id="{{ site.url }}{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}"> - </span>&nbsp;views
                         </span>
 
                         {% for cat in post.categories %}
@@ -99,7 +99,7 @@ comments: false
         </div>
     </div>
     <!-- /pagination -->
-    
+
         
 </section>
 <!-- /section.content -->
