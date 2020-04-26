@@ -19,6 +19,10 @@ keywords: ubuntu,  ros
 
 【视频】中科院软件所-机器人操作系统入门[https://www.bilibili.com/video/BV1mJ411R7Ni?p=2](https://www.bilibili.com/video/BV1mJ411R7Ni?p=2)
 
+正确安装的效果
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-04-26 13-38-38屏幕截图.png)
+
 ### 安装中遇到的坑
 
 -------
