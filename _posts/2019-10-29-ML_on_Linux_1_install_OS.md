@@ -35,7 +35,7 @@ keywords: linux, windows, ununtu, ssd
 
 ## 2.启动盘制作
 
-如图，双击iso打开，选择启动→写入硬盘镜像→写入，ok。
+如图，双击.iso文件打开，选择启动→写入硬盘映像→写入，等一会儿，ok。
 
 ![image-20191029102616165](https://qq849012418.github.io/images/posts/linux/image-20191029102616165.png)
 
@@ -49,7 +49,7 @@ keywords: linux, windows, ununtu, ssd
 
 ## 3.BIOS的简单修改
 
-开机进入boot，我的机械革命是按F2，其他品牌请百度。
+插上U盘和移动硬盘，开机进入boot，我的机械革命是按F2，联想小新也是，其他品牌请百度。
 
 把security boot关了
 
@@ -69,7 +69,7 @@ keywords: linux, windows, ununtu, ssd
 
 ## 5.再次修改BIOS（该步骤还需优化）
 
-把硬盘中的第一位引导由windows boot manager改为ubuntu（可能会有两个ubuntu，一个是命令行，一个是图形化界面，选到图形化的那个）
+系统安装完后，重启进入BIOS，把硬盘中的第一位引导由windows boot manager改为ubuntu（可能会有两个ubuntu，一个是命令行，一个是图形化界面，选到图形化的那个）
 
 ## 6.可能遇到的问题
 
