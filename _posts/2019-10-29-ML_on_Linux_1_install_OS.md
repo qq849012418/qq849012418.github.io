@@ -62,10 +62,13 @@ keywords: linux, windows, ununtu, ssd
 说一些注意事项，参考文献3.
 
 1. 安装类型选择其他选项，然后不联网，完整安装，不安装第三方软件。
-
 2.  在分区页面设置efi（800M)，交换空间(8g)和ext4文件系统（剩下的全部容量，挂载点“/”）三个区。
 3. 引导文件放置的设备直接选到移动硬盘即可，不要选到下面的分区。
 4. 示意图：
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/a50fd139b439f1c376b8a866d067191.jpg)
+
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/d320171196c00900606332ae01e1eb4.jpg)
 
 ## 5.再次修改BIOS（该步骤还需优化）
 
@@ -137,4 +140,3 @@ Keenster，写于2019.10.29-10.31
 - https://www.cnblogs.com/lemos/p/8297071.html"linux 系统全盘备份"
 - https://blog.csdn.net/weixin_44001854/article/details/84896333"给移动硬盘装上LINUX全攻略"
 - https://blog.csdn.net/qq805934132/article/details/82909759"Ubuntu禁用nouveau驱动"
-
