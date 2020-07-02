@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>从零开始的机器学习平台配置（二）算法环境配置 &mdash; KEENSTER.CN</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/collection.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/common.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://keenster.cn/2019/10/31/ML_on_Linux_2_install_software/">
+    <link rel="alternate" type="application/atom+xml" title="KEENSTER.CN" href="http://keenster.cn/feed.xml">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/favicon.ico">
+    
+    <meta property="og:title" content="从零开始的机器学习平台配置（二）算法环境配置">
+      
+    <meta name="keywords" content="linux, ununtu, opencv, cuda, pytorch, tensorRT">
+    <meta name="og:keywords" content="linux, ununtu, opencv, cuda, pytorch, tensorRT">
+      
+    <meta name="description" content="这一章内容很干，新手可能要装一天，但是装完后绝对可以对linux更加熟悉。">
+    <meta name="og:description" content="这一章内容很干，新手可能要装一天，但是装完后绝对可以对linux更加熟悉。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://keenster.cn/2019/10/31/ML_on_Linux_2_install_software/">
+    <meta property="og:site_name" content="KEENSTER.CN">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2019-10-31">
+    
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/main.js"></script>
+
+        
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://keenster.cn/" title="KEENSTER.CN"><span class="octicon octicon-mark-github"></span> KEENSTER.CN</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://keenster.cn/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://keenster.cn/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://keenster.cn/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://keenster.cn/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://keenster.cn/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="从零开始的机器学习平台配置（二">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">从零开始的机器学习平台配置（二）算法环境配置</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/10/31
+            &nbsp;<span id="/2019/10/31/ML_on_Linux_2_install_software/" class="leancloud_visitors" data-flag-title="从零开始的机器学习平台配置（二）算法环境配置"> - </span>&nbsp;views
+          </span>
+          
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://keenster.cn/categories/#Linux" title="Linux">Linux</a>
+          </span>
+          
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>这一章内容很干，新手可能要装一天，但是装完后绝对可以对linux更加熟悉。</p>
+
+<hr />
+
+<h2 id="0修改默认python环境">0.修改默认python环境</h2>
+
+<p>将原来 python 的软链接重命名：</p>
+
+<p>mv /usr/bin/python /usr/bin/python.bak</p>
+
+<p>将 python 链接至 python3：</p>
+
+<p>ln -s /usr/bin/python3.6 /usr/bin/python</p>
+
+<p>这时，再查看 Python 的版本：</p>
+
+<p>python -V</p>
+
+<h2 id="1opencv">1.opencv</h2>
+
+<p>参考https://xinyang-go.github.io/jiaolong-cv-novice-tutorial/environment-setup/及队内培训。</p>
+
+<p>首先安装依赖，在控制台执行以下命令</p>
+
+<pre><code class="language-Shell">sudo apt update
+sudo apt upgrade -y
+sudo apt install -y htop cmake cmake-gui gcc g++ vim git wget net-tools zip unzip build-essential intltool curl libcanberra-gtk-module python python-dev python-pip python-tk python3 python3-dev python3-pip python3-tk libssl-dev libgtk-3-dev libeigen3-dev libavcodec-dev libavformat-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev libavresample-dev libswscale-dev libavutil-dev libopenexr-dev
+sudo pip3 install --upgrade pip setuptools
+pip3 install --user numpy
+</code></pre>
+
+<p>下载opencv4.1.2及其contrib源码</p>
+
+<p>https://github.com/opencv/opencv/archive/4.1.2.tar.gz</p>
+
+<p>https://github.com/opencv/opencv_contrib/archive/4.1.2.tar.gz</p>
+
+<p>创建opencv-4.1.2目录，将两个文件夹解压到这里，再创建一个build文件夹。</p>
+
+<p>（参考下面的博客进行camke-gui编译)</p>
+
+<p>https://blog.csdn.net/jindunwan7388/article/details/80397700</p>
+
+<p>下面的更全面，非gui</p>
+
+<p>https://www.jianshu.com/p/f54b0fc13811</p>
+
+<p>注意事项：</p>
+
+<p>OPENCV-GENERATE-PKGCONFIG=ON</p>
+
+<p>CMAKE_INSTALL_PERFIX=/usr/local/opencv4</p>
+
+<p>OPENCV_EXTRA_MODULES_PATH=/你刚创建的opencv-4.1.2目录/opencv_contrib-4.1.2/modules</p>
+
+<p>[20200209更新] 如果你需要使用surf等nonfree模块，应多选这项</p>
+
+<p>OPENCV_ENABLE_NONFREE=ON</p>
+
+<p>环境配置见博客</p>
+
+<h2 id="2clion">2.CLION</h2>
+
+<p>见官网</p>
+
+<h2 id="3pycharm">3.PYCHARM</h2>
+
+<p>见官网</p>
+
+<h2 id="4cuda">4.CUDA</h2>
+
+<p>https://developer.nvidia.com/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=1804&amp;target_type=runfilelocal</p>
+
+<p>对于ubuntu18.04下的64为版本，也可用以下代码安装</p>
+
+<pre><code class="language-Shell">wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run
+sudo sh cuda_10.1.243_418.87.00_linux.run
+</code></pre>
+
+<p>环境变量设置</p>
+
+<pre><code class="language-Shell">export PATH=/usr/local/cuda-10.1/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+</code></pre>
+
+<h3 id="45-cudnn">4.5 CUDNN</h3>
+
+<p>https://developer.nvidia.com/rdp/cudnn-download</p>
+
+<p>下载lib文件并复制到cuda的目录(/usr/local/cuda-10.1)</p>
+
+<p>sudo ldconfig即可</p>
+
+<h2 id="5pytorch">5.pytorch</h2>
+
+<p>https://download.pytorch.org/whl/torch_stable.html在这个链接里找到你需要的版本，用官网的下载方式会很慢。直接用浏览器下。</p>
+
+<p>比如我的是</p>
+
+<p><a href="https://download.pytorch.org/whl/cu101/torch-1.3.0-cp36-cp36m-manylinux1_x86_64.whl">cu101/torch-1.3.0-cp36-cp36m-manylinux1_x86_64.whl</a></p>
+
+<p><a href="https://download.pytorch.org/whl/cu101/torchvision-0.4.1-cp36-cp36m-linux_x86_64.whl">cu101/torchvision-0.4.1-cp36-cp36m-linux_x86_64.whl</a></p>
+
+<p>下好后进入到相应文件夹中，sudo pip3 install 文件名即可</p>
+
+<p>在py3环境下输入import torch和import torchvision来验证是否安装成功。</p>
+
+<h2 id="6tensorrt">6.tensorRT</h2>
+
+<p>https://developer.nvidia.com/nvidia-tensorrt-6x-download</p>
+
+<p>环境变量设置</p>
+
+<pre><code class="language-Shell">export LD_LIBRARY_PATH=/home/k/RM/TensorRT-6.0.1.5/lib
+</code></pre>
+
+<h2 id="7torch2trt用于模型转换">7.torch2trt(用于模型转换)</h2>
+
+<pre><code class="language-Shell">git clone https://github.com/NVIDIA-AI-IOT/torch2trt
+cd torch2trt
+sudo python setup.py install
+</code></pre>
+
+<h2 id="8装一些常用工具吧">8.装一些常用工具吧～</h2>
+
+<p>deepin-wine: 参考https://gitee.com/wszqkzqk/deepin-wine-for-ubuntu即可。</p>
+    
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2019/10/31/ML_on_Linux_2_install_software/',
+            clientID: '6c2b1ee2c9cb49a89ed0',
+            clientSecret: '305120a30d1782f2cf2bfe88c931769900f5598d',
+            repo: 'BlogTalk',
+            owner: 'qq849012418',
+            admin: ['qq849012418'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/modules/sidebar-search.css">
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/simple-jekyll-search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://keenster.cn/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+
+</section>
+<!-- /section.content -->
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js"></script>
+    <script>
+    AV.init({
+    appId: "rjTl2bympW4UOMkIS485rNvf-9Nh9j0Va",
+    appKey: "1Qzjy14qipXFCRcbSMoRXUuh",
+    serverURL: "http://keenster.cn"
+    });
+    var name='Counter';
+
+    function createRecord(Counter){
+      // 设置 ACL
+      var acl = new AV.ACL();
+      acl.setPublicReadAccess(true);
+      acl.setPublicWriteAccess(true);
+      // 获得span的所有元素
+      var elements=document.getElementsByClassName('leancloud_visitors');
+      // 一次创建多条记录
+      var allcounter=[];
+      for (var i = 0; i < elements.length ; i++) {
+        // 若某span的内容不包括 '-' ，则不必创建记录
+        if(elements[i].textContent.indexOf('-') == -1){
+          continue;
+        }
+        var title = elements[i].getAttribute('data-flag-title');
+        var url = elements[i].id;
+
+        var newcounter = new Counter();
+        newcounter.setACL(acl);
+        newcounter.set("title", title);
+        newcounter.set("url", url);
+        newcounter.set("time", 0);
+
+        allcounter.push(newcounter);
+        // 顺便更新显示span为默认值0
+        elements[i].textContent=0;
+      }
+
+      AV.Object.saveAll(allcounter).then(function (todo) {
+        // 成功保存记录之后
+        console.log('创建记录成功！');
+      }, function (error) {
+        // 异常错误 
+        console.error('创建记录失败: ' + error.message);
+      });
+    }
+
+    function showCount(Counter){
+      // 是否需要创建新纪录的标志（添加一篇新文章）
+      var flag=false;
+      var query = new AV.Query(name);
+      query.greaterThanOrEqualTo('time', 0);
+      query.find().then(function (results) {
+        // 当获取到的记录为0时置默认值
+        if(results.length==0){
+          $('.leancloud_visitors').text('-');
+          flag=true;
+          console.log('返回查询记录为空');
+          // 如果获取到空记录就创建新记录
+          createRecord(Counter);
+          return;
+        }
+        // 将获取到的数据设置为text
+        for (var i = 0; i < results.length; i++) {
+          var item = results[i];
+          var url = item.get('url');
+          var time = item.get('time');
+          var element = document.getElementById(url);
+          element.textContent = time;
+        }
+        // 当某个span含有默认值时说明需要创建记录
+        if($('.leancloud_visitors').text().indexOf("-") != -1){
+          flag=true;
+        }
+        // 当获取的记录数与span个数不吻合时
+        if(results.length != $('.leancloud_visitors').length){
+          flag=true;
+        }
+        if(flag){
+          createRecord(Counter);
+        }
+      }, function (error) {
+        console.log('query error:'+error.message);
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend(name);
+      showCount(Counter);
+    });
+    </script>
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2019-2020
+                    <span title="Keenster">Keenster</span>
+
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/qq849012418/qq849012418.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://keenster.cn/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://keenster.cn/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/geopattern.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-156339178-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
+

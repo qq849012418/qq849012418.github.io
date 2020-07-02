@@ -1,0 +1,393 @@
+
+
+[
+  
+  
+    {
+      "title"    : "页面没有找到",
+      "url"      : "http://keenster.cn/404.html"
+    } ,
+  
+  
+  
+    {
+      "title"    : "About",
+      "url"      : "http://keenster.cn/about/"
+    } ,
+  
+  
+  
+    {
+      "title"    : "归档",
+      "url"      : "http://keenster.cn/archives/"
+    } ,
+  
+  
+  
+    {
+      "title"    : "Categories",
+      "url"      : "http://keenster.cn/categories/"
+    } ,
+  
+  
+  
+  
+  
+    {
+      "title"    : "Links",
+      "url"      : "http://keenster.cn/links/"
+    } ,
+  
+  
+  
+    {
+      "title"    : "Open Source Projects",
+      "url"      : "http://keenster.cn/open-source/"
+    } ,
+  
+  
+  
+  
+  
+    {
+      "title"    : "Wiki",
+      "url"      : "http://keenster.cn/wiki/"
+    } ,
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    {
+      "title"    : "template page",
+      "category" : "cate1",
+      
+      "url"      : "http://keenster.cn/2019/10/27/helloword/"
+    } ,
+  
+    {
+      "title"    : "从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/2019/10/29/ML_on_Linux_1_install_OS/"
+    } ,
+  
+    {
+      "title"    : "从零开始的机器学习平台配置（二）算法环境配置",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/2019/10/31/ML_on_Linux_2_install_software/"
+    } ,
+  
+    {
+      "title"    : "从零开始的机器学习平台配置（三）备份及还原你的系统",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/2019/11/03/Backup_your_system/"
+    } ,
+  
+    {
+      "title"    : "(持续更新)-Linux实用小工具安装方法合集",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/2019/11/17/ubuntu_tools_install_continus/"
+    } ,
+  
+    {
+      "title"    : "opencv3代码移植到opencv4环境下需要修改什么？",
+      "category" : "OpenCV",
+      
+      "url"      : "http://keenster.cn/2019/11/22/opencv3to4tips/"
+    } ,
+  
+    {
+      "title"    : "使用心阶云实现全平台科学上网",
+      "category" : "Net",
+      
+      "url"      : "http://keenster.cn/2020/01/16/scientific_internet_access/"
+    } ,
+  
+    {
+      "title"    : "linux的cuda突然报cuda initialization failure with error 100的解决方案",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/2020/02/12/how_to_deal_with_cuda_communication-problem/"
+    } ,
+  
+    {
+      "title"    : "使用星空CDN和JSDelivr CDN对GithubPage未备案.cn域名进行全站加速",
+      "category" : "Net",
+      
+      "url"      : "http://keenster.cn/2020/02/27/make_my_githubpage_faster_with_free_cdn/"
+    } ,
+  
+    {
+      "title"    : "Hololens2 初探秘手册",
+      "category" : "AR",
+      
+      "url"      : "http://keenster.cn/2020/02/29/Hololens2_1_bugs_in_hololens2_environment_configuration/"
+    } ,
+  
+    {
+      "title"    : "Hololens2开发 (二) 基本输入探索（语音、手势、眼动）",
+      "category" : "AR",
+      
+      "url"      : "http://keenster.cn/2020/04/11/Hololens2_2_basic_input/"
+    } ,
+  
+    {
+      "title"    : "(持续更新)-Windows实用小工具安装方法合集",
+      "category" : "Windows",
+      
+      "url"      : "http://keenster.cn/2020/04/11/windows_tools_install_continus/"
+    } ,
+  
+    {
+      "title"    : "Unity中自动计算含mesh的子对象包围盒",
+      "category" : "Unity",
+      
+      "url"      : "http://keenster.cn/2020/04/16/Unity_How_to_get_bounding_box_of_all_mesh_in_a_prefab/"
+    } ,
+  
+    {
+      "title"    : "ROS学习（一）在ubuntu上安装ros melodic遇到的问题",
+      "category" : "ROS",
+      
+      "url"      : "http://keenster.cn/2020/04/26/ros_1_on_linux/"
+    } ,
+  
+    {
+      "title"    : "ROS学习（二）ROS基本了解和基本测试",
+      "category" : "ROS",
+      
+      "url"      : "http://keenster.cn/2020/04/26/ros_2_study/"
+    } ,
+  
+    {
+      "title"    : "C# 局域网多文件传输实现（TCPclient/TCPlistener）",
+      "category" : "C#",
+      
+      "url"      : "http://keenster.cn/2020/05/06/csharp_tcplistener_tcpclient/"
+    } ,
+  
+    {
+      "title"    : "Android Studio",
+      "category" : "Android",
+      
+      "url"      : "http://keenster.cn/wiki/android-studio/"
+    } ,
+  
+    {
+      "title"    : "Axure",
+      "category" : "tools",
+      
+      "url"      : "http://keenster.cn/wiki/axure/"
+    } ,
+  
+    {
+      "title"    : "Badminton",
+      "category" : "Hobbies",
+      
+      "url"      : "http://keenster.cn/wiki/badminton/"
+    } ,
+  
+    {
+      "title"    : "中文文案排版指北（简体中文版）",
+      "category" : "Copywriting",
+      
+      "url"      : "http://keenster.cn/wiki/chinese-copywriting-guidelines/"
+    } ,
+  
+    {
+      "title"    : "Eclipse",
+      "category" : "Eclipse",
+      
+      "url"      : "http://keenster.cn/wiki/eclipse/"
+    } ,
+  
+    {
+      "title"    : "Emacs",
+      "category" : "Emacs",
+      
+      "url"      : "http://keenster.cn/wiki/emacs/"
+    } ,
+  
+    {
+      "title"    : "Git",
+      "category" : "Git",
+      
+      "url"      : "http://keenster.cn/wiki/git/"
+    } ,
+  
+    {
+      "title"    : "善用佳软",
+      "category" : "Recommends",
+      
+      "url"      : "http://keenster.cn/wiki/good-soft/"
+    } ,
+  
+    {
+      "title"    : "IDA Pro",
+      "category" : "Debug",
+      
+      "url"      : "http://keenster.cn/wiki/ida-pro/"
+    } ,
+  
+    {
+      "title"    : "IntelliJ IDEA",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/intellij-idea/"
+    } ,
+  
+    {
+      "title"    : "Kindle",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/kindle/"
+    } ,
+  
+    {
+      "title"    : "Linux/Unix",
+      "category" : "Linux",
+      
+      "url"      : "http://keenster.cn/wiki/linux/"
+    } ,
+  
+    {
+      "title"    : "Mac OS X",
+      "category" : "Mac",
+      
+      "url"      : "http://keenster.cn/wiki/mac/"
+    } ,
+  
+    {
+      "title"    : "Markdown",
+      "category" : "Markdown",
+      
+      "url"      : "http://keenster.cn/wiki/markdown/"
+    } ,
+  
+    {
+      "title"    : "MPV",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/mpv/"
+    } ,
+  
+    {
+      "title"    : "MySQL",
+      "category" : "MySQL",
+      
+      "url"      : "http://keenster.cn/wiki/mysql/"
+    } ,
+  
+    {
+      "title"    : "OllyDbg",
+      "category" : "debug",
+      
+      "url"      : "http://keenster.cn/wiki/ollydbg/"
+    } ,
+  
+    {
+      "title"    : "OneNote",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/onenote/"
+    } ,
+  
+    {
+      "title"    : "PHP",
+      "category" : "php",
+      
+      "url"      : "http://keenster.cn/wiki/php/"
+    } ,
+  
+    {
+      "title"    : "PowerShell",
+      "category" : "Windows",
+      
+      "url"      : "http://keenster.cn/wiki/powershell/"
+    } ,
+  
+    {
+      "title"    : "Python",
+      "category" : "Python",
+      
+      "url"      : "http://keenster.cn/wiki/python/"
+    } ,
+  
+    {
+      "title"    : "Qt Creator",
+      "category" : "Qt",
+      
+      "url"      : "http://keenster.cn/wiki/qt-creator/"
+    } ,
+  
+    {
+      "title"    : "Source Insight",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/source-insight/"
+    } ,
+  
+    {
+      "title"    : "Swimming",
+      "category" : "Hobbies",
+      
+      "url"      : "http://keenster.cn/wiki/swimming/"
+    } ,
+  
+    {
+      "title"    : "Wiki Template",
+      "category" : "cate1",
+      
+      "url"      : "http://keenster.cn/wiki/template/"
+    } ,
+  
+    {
+      "title"    : "Vim",
+      "category" : "Vim",
+      
+      "url"      : "http://keenster.cn/wiki/vim/"
+    } ,
+  
+    {
+      "title"    : "Visio",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/visio/"
+    } ,
+  
+    {
+      "title"    : "Visual Studio Code",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/visual-studio-code/"
+    } ,
+  
+    {
+      "title"    : "Visual Studio",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/visual-studio/"
+    } ,
+  
+    {
+      "title"    : "Windows Terminal",
+      "category" : "Tools",
+      
+      "url"      : "http://keenster.cn/wiki/windows-terminal/"
+    } 
+  
+]
+

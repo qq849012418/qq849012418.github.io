@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>ROS学习（二）ROS基本了解和基本测试 &mdash; KEENSTER.CN</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/collection.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/common.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://keenster.cn/2020/04/26/ros_2_study/">
+    <link rel="alternate" type="application/atom+xml" title="KEENSTER.CN" href="http://keenster.cn/feed.xml">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/favicon.ico">
+    
+    <meta property="og:title" content="ROS学习（二）ROS基本了解和基本测试">
+      
+    <meta name="keywords" content="ubuntu,  ros">
+    <meta name="og:keywords" content="ubuntu,  ros">
+      
+    <meta name="description" content="接着上一讲。">
+    <meta name="og:description" content="接着上一讲。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://keenster.cn/2020/04/26/ros_2_study/">
+    <meta property="og:site_name" content="KEENSTER.CN">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2020-04-26">
+    
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/main.js"></script>
+
+        
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://keenster.cn/" title="KEENSTER.CN"><span class="octicon octicon-mark-github"></span> KEENSTER.CN</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://keenster.cn/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://keenster.cn/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://keenster.cn/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://keenster.cn/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://keenster.cn/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="ROS学习（二）ROS基本了解">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">ROS学习（二）ROS基本了解和基本测试</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2020/04/26
+            &nbsp;<span id="/2020/04/26/ros_2_study/" class="leancloud_visitors" data-flag-title="ROS学习（二）ROS基本了解和基本测试"> - </span>&nbsp;views
+          </span>
+          
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://keenster.cn/categories/#ROS" title="ROS">ROS</a>
+          </span>
+          
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>接着上一讲。</p>
+
+<hr />
+
+<h2 id="可能用到的链接">可能用到的链接</h2>
+
+<p>【视频】中科院软件所-机器人操作系统入门<a href="https://www.bilibili.com/video/BV1mJ411R7Ni?p=2">https://www.bilibili.com/video/BV1mJ411R7Ni?p=2</a></p>
+
+<p>【IDE】roboware的安装和基础</p>
+
+<p><a href="https://www.cnblogs.com/flyinggod/p/11444353.html">https://www.cnblogs.com/flyinggod/p/11444353.html</a></p>
+
+<p>【cnblog】Ubuntu 18.04 + ROS Melodic + TurtleBot3仿真</p>
+
+<p><a href="https://www.cnblogs.com/raina/p/12162435.html">https://www.cnblogs.com/raina/p/12162435.html</a></p>
+
+<p>【知乎】ROS机器人实例-TurtleBot<strong><em>（1和3都有）</em></strong></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/35822939">https://zhuanlan.zhihu.com/p/35822939</a></p>
+
+<p>视频笔记：</p>
+
+<h4 id="ros中没有进程的概念只有节点noderos就是提供了一套框架来管理这些node">ros中没有进程的概念，只有节点（node），ros就是提供了一套框架来管理这些node</h4>
+
+<h4 id="ros工程框架中的最高级catkin工作空间">ros工程框架中的最高级：catkin工作空间</h4>
+
+<p>建立工作空间并编译：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span>  ~/catkin_ws/src
+<span class="nb">cd</span> ~/catkin_ws
+catkin_make
+<span class="nb">source</span> 【src路径】/devel/setup.bash（编译完成后刷新
+</code></pre></div></div>
+
+<p>src→build→devel（目标文件）</p>
+
+<p>src下面有很多package，他是编译的基本单元</p>
+
+<p>package里至少要有cmakelists.txt（编译规则）还有package.xml（自我描述）</p>
+
+<p>可以放代码文件夹</p>
+
+<p>scripts(<em>.py,</em>.sh)</p>
+
+<p>include(.h)</p>
+
+<p>src(.cpp)</p>
+
+<p>可以放通信格式的文件夹</p>
+
+<p>srv</p>
+
+<p>msg</p>
+
+<p>action</p>
+
+<p>配置文件config（*.yaml)</p>
+
+<p>launch</p>
+
+<p><img src="https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/ros工程架构.png" alt="" /></p>
+
+<h3 id="常用指令">常用指令：</h3>
+
+<p>rospack find package_name查找包的地址</p>
+
+<p>rospack list 列出所有本地包</p>
+
+<p>roscd package_name 直接跳到pkg的路径</p>
+
+<p>rosls package_name 相当于ls</p>
+
+<p>rosed package_name file_name 编辑pkg中的文件 相当于vim</p>
+
+<p>catkin_create_pkg <pkg_name> [deps] 创建package</pkg_name></p>
+
+<p>rosdep install … 安装包依赖</p>
+
+<h2 id="turtlebot3学习">turtlebot3学习</h2>
+
+<p><a href="https://github.com/turtlebot/turtlebot">github官方地址</a></p>
+
+<p>最快的安装方法：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>ros-melodic-turtlebot3-<span class="k">*</span>
+</code></pre></div></div>
+
+<p>最快的测试方法(gazebo模拟+键盘控制运动）：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">TURTLEBOT3_MODEL</span><span class="o">=</span>burger
+roslaunch turtlebot3_gazebo turtlebot3_world.launch
+（新开一个终端）
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch 
+</code></pre></div></div>
+
+<p><img src="https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/turtlebot3测试.png" alt="1" /></p>
+
+<p>最后我们把”export TURTLEBOT3_MODEL=burger”添加到.bashrc文件, 免得每次重新设置这个变量:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"export TURTLEBOT3_MODEL=burger"</span> <span class="o">&gt;&gt;</span>  ~/.bashrc
+</code></pre></div></div>
+    
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2020/04/26/ros_2_study/',
+            clientID: '6c2b1ee2c9cb49a89ed0',
+            clientSecret: '305120a30d1782f2cf2bfe88c931769900f5598d',
+            repo: 'BlogTalk',
+            owner: 'qq849012418',
+            admin: ['qq849012418'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/modules/sidebar-search.css">
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/simple-jekyll-search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://keenster.cn/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+
+</section>
+<!-- /section.content -->
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js"></script>
+    <script>
+    AV.init({
+    appId: "rjTl2bympW4UOMkIS485rNvf-9Nh9j0Va",
+    appKey: "1Qzjy14qipXFCRcbSMoRXUuh",
+    serverURL: "http://keenster.cn"
+    });
+    var name='Counter';
+
+    function createRecord(Counter){
+      // 设置 ACL
+      var acl = new AV.ACL();
+      acl.setPublicReadAccess(true);
+      acl.setPublicWriteAccess(true);
+      // 获得span的所有元素
+      var elements=document.getElementsByClassName('leancloud_visitors');
+      // 一次创建多条记录
+      var allcounter=[];
+      for (var i = 0; i < elements.length ; i++) {
+        // 若某span的内容不包括 '-' ，则不必创建记录
+        if(elements[i].textContent.indexOf('-') == -1){
+          continue;
+        }
+        var title = elements[i].getAttribute('data-flag-title');
+        var url = elements[i].id;
+
+        var newcounter = new Counter();
+        newcounter.setACL(acl);
+        newcounter.set("title", title);
+        newcounter.set("url", url);
+        newcounter.set("time", 0);
+
+        allcounter.push(newcounter);
+        // 顺便更新显示span为默认值0
+        elements[i].textContent=0;
+      }
+
+      AV.Object.saveAll(allcounter).then(function (todo) {
+        // 成功保存记录之后
+        console.log('创建记录成功！');
+      }, function (error) {
+        // 异常错误 
+        console.error('创建记录失败: ' + error.message);
+      });
+    }
+
+    function showCount(Counter){
+      // 是否需要创建新纪录的标志（添加一篇新文章）
+      var flag=false;
+      var query = new AV.Query(name);
+      query.greaterThanOrEqualTo('time', 0);
+      query.find().then(function (results) {
+        // 当获取到的记录为0时置默认值
+        if(results.length==0){
+          $('.leancloud_visitors').text('-');
+          flag=true;
+          console.log('返回查询记录为空');
+          // 如果获取到空记录就创建新记录
+          createRecord(Counter);
+          return;
+        }
+        // 将获取到的数据设置为text
+        for (var i = 0; i < results.length; i++) {
+          var item = results[i];
+          var url = item.get('url');
+          var time = item.get('time');
+          var element = document.getElementById(url);
+          element.textContent = time;
+        }
+        // 当某个span含有默认值时说明需要创建记录
+        if($('.leancloud_visitors').text().indexOf("-") != -1){
+          flag=true;
+        }
+        // 当获取的记录数与span个数不吻合时
+        if(results.length != $('.leancloud_visitors').length){
+          flag=true;
+        }
+        if(flag){
+          createRecord(Counter);
+        }
+      }, function (error) {
+        console.log('query error:'+error.message);
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend(name);
+      showCount(Counter);
+    });
+    </script>
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2019-2020
+                    <span title="Keenster">Keenster</span>
+
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/qq849012418/qq849012418.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://keenster.cn/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://keenster.cn/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/geopattern.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-156339178-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
+

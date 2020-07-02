@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://keenster.cn/feed.xml" rel="self" type="application/atom+xml" /><link href="http://keenster.cn/" rel="alternate" type="text/html" /><updated>2020-07-02T02:44:26+00:00</updated><id>http://keenster.cn/feed.xml</id><title type="html">KEENSTER.CN</title><subtitle>锦阁的个人博客</subtitle><author><name>Keenster</name></author><entry><title type="html">C# 局域网多文件传输实现（TCPclient/TCPlistener）</title><link href="http://keenster.cn/2020/05/06/csharp_tcplistener_tcpclient/" rel="alternate" type="text/html" title="C# 局域网多文件传输实现（TCPclient/TCPlistener）" /><published>2020-05-06T00:00:00+00:00</published><updated>2020-05-06T00:00:00+00:00</updated><id>http://keenster.cn/2020/05/06/csharp_tcplistener_tcpclient</id><content type="html" xml:base="http://keenster.cn/2020/05/06/csharp_tcplistener_tcpclient/">&lt;p&gt;一个小DEMO，实现了客户端向服务端请求文件，服务端循环发送文件，客户端接收存储的功能。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_44772948/article/details/100658133&quot;&gt;C#文件传输&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/jhlong/p/5799248.html&quot;&gt;简单的C#TCP通讯&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/ChengWenHao/p/CSharpFileInfo.html&quot;&gt;[使用FileInfo获取文件信息]&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;C#&lt;a href=&quot;https://blog.csdn.net/dickens88/article/details/5442229&quot;&gt;扫描文件和文件夹的方法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/alsf/p/6247658.html&quot;&gt;C#中ToString()格式详解&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tcpxxx介绍&quot;&gt;tcpxxx介绍&lt;/h2&gt;
+
+&lt;p&gt;TcpClient是Socket的基础上的封装,为了简化一部分Socket的功能。
+1&amp;gt;Socket支持TCP，UDP，IP包，Stream，Dgram等诸多类型
+2&amp;gt;而TcpClient只支持TCP和Stream&lt;/p&gt;
+
+&lt;h2 id=&quot;服务端先开启&quot;&gt;服务端（先开启）&lt;/h2&gt;
+
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Collections.Generic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.IO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Linq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Net&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Net.Sockets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Threading.Tasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;FileServer&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Program&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;TcpListener&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listenSocket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;TcpListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IPAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;9999&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;TcpClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendFile&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;D:/Resource/3dmodel/catia/0625SJTU&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;DirectoryInfo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;di&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;DirectoryInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;/*            DirectoryInfo[] dirs = di.GetDirectories();     //扫描文件夹
+            foreach (DirectoryInfo di1 in dirs)
+            {
+                listBox1.Items.Add(di1.Name);
+            }*/&lt;/span&gt;
+
+            &lt;span class=&quot;n&quot;&gt;FileInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;di&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetFiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;                &lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//扫描文件 GetFiles(&quot;*.prefab&quot;);可以实现扫描扫描prefab文件 &lt;/span&gt;
+            
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;listenSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listenSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AcceptTcpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+                &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReceiveBufferSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  
+
+                &lt;span class=&quot;n&quot;&gt;NetworkStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//获取网络流  &lt;/span&gt;
+
+                &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//读取网络流中的数据  &lt;/span&gt;
+
+                
+
+                &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receiveString&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCII&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Trim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'\0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//转换成字符串  &lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;receiveString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Equals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;getFiles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCII&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()));&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//关闭流  &lt;/span&gt;
+
+                &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//关闭Client  &lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;文件发送失败&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            
+            &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FileInfo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+                &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;listenSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listenSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AcceptTcpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;NetworkStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netStream&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                        
+                        &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+                        &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;D10&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+                        &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileAttributeByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+                       
+                        &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CopyTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileAttributeByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//文件名字符流的长度的字符流排在前面。&lt;/span&gt;
+                      
+                        &lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CopyTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileAttributeByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//紧接着文件名的字符流&lt;/span&gt;
+                     
+                        &lt;span class=&quot;n&quot;&gt;netStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileAttributeByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileAttributeByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                        
+                        &lt;span class=&quot;n&quot;&gt;FileStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FS&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;
+                            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;FileStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FullName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                                &lt;span class=&quot;n&quot;&gt;FileMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileAccess&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lengthBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                        &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                            &lt;span class=&quot;n&quot;&gt;lengthBytes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                            &lt;span class=&quot;n&quot;&gt;netStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lengthBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+
+                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lengthBytes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+                        &lt;span class=&quot;n&quot;&gt;FS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;netStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{0}文件传输完毕&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;文件发送失败&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;客户端&quot;&gt;客户端&lt;/h2&gt;
+
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Collections.Generic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.IO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Linq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Net&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Net.Sockets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System.Threading.Tasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;FileClient&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Program&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;TcpClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;TcpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;NetworkStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;IPEndPoint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;serverIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receiveFileByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+            &lt;span class=&quot;n&quot;&gt;serverIP&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IPEndPoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IPAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;9999&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//     clientStream = clientStream.Read(receiveFileByte, 0, receiveFileByte.Length);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serverIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filenum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCII&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;getFiles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;256&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseData&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 
+                &lt;span class=&quot;c1&quot;&gt;// Read the first batch of the TcpServer response bytes.&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Int32&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;responseData&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCII&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Received: {0}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;filenum&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;responseData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filenum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;TcpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serverIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                
+                    &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;256&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;D10&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthSize&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameLengByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthForValueByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLength&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameLengByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;文件名字符流的长度为：&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+                    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthNum&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Convert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToInt32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameLengthNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+                    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameSize&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameLengthNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unicode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileNameByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileNameSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;文件名为：&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+                    &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dirPath&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;./WebFile&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dirPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;Directory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateDirectory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dirPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                
+                    &lt;span class=&quot;n&quot;&gt;FileInfo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;FileInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;FileStream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;FileStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dirPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileAccess&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;receiveFileByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receiveFileByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;receiveFileByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                        &lt;span class=&quot;c1&quot;&gt;//Console.WriteLine(&quot;接受完成&quot;);&lt;/span&gt;
+
+
+
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;接受完成&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;clientStream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;clientSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+          
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;文件传输效果&quot;&gt;文件传输效果&lt;/h2&gt;
+
+&lt;p&gt;客户端根目录下创建了一个名为WebFile的文件夹，服务端目标目录中的所有文件都被保存到这里&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/微信截图_20200507004246.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">一个小DEMO，实现了客户端向服务端请求文件，服务端循环发送文件，客户端接收存储的功能。</summary></entry><entry><title type="html">ROS学习（一）在ubuntu上安装ros melodic遇到的问题</title><link href="http://keenster.cn/2020/04/26/ros_1_on_linux/" rel="alternate" type="text/html" title="ROS学习（一）在ubuntu上安装ros melodic遇到的问题" /><published>2020-04-26T00:00:00+00:00</published><updated>2020-04-26T00:00:00+00:00</updated><id>http://keenster.cn/2020/04/26/ros_1_on_linux</id><content type="html" xml:base="http://keenster.cn/2020/04/26/ros_1_on_linux/">&lt;p&gt;项目原因，开始自学ros系统，本文展示了在ubuntu18.04上安装ros melodic的具体方法及可能会遇到的坑。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;可能用到的链接&quot;&gt;可能用到的链接&lt;/h2&gt;
+
+&lt;p&gt;官方melodic安装&lt;a href=&quot;http://wiki.ros.org/cn/melodic/Installation/Ubuntu&quot;&gt;http://wiki.ros.org/cn/melodic/Installation/Ubuntu&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;中文wiki&lt;a href=&quot;http://wiki.ros.org/cn&quot;&gt;http://wiki.ros.org/cn&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;【视频】中科院软件所-机器人操作系统入门&lt;a href=&quot;https://www.bilibili.com/video/BV1mJ411R7Ni?p=2&quot;&gt;https://www.bilibili.com/video/BV1mJ411R7Ni?p=2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;正确安装的效果&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-04-26 13-38-38屏幕截图.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;安装中遇到的坑&quot;&gt;安装中遇到的坑&lt;/h3&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list&lt;/p&gt;
+
+&lt;p&gt;ERROR: cannot download default sources list from:
+https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
+Website may be down.&lt;/p&gt;
+
+&lt;p&gt;解决方案：参考&lt;a href=&quot;https://www.cnblogs.com/gary-guo/p/12650552.html&quot;&gt;郭润&lt;/a&gt;的方法，但是有所不同&lt;/p&gt;
+
+&lt;p&gt;首先排查原因到网络问题，这个链接无法在浏览器中打开，代理、证书啥的好像都没问题，所以网上大多数解决方案都没啥用。&lt;/p&gt;
+
+&lt;p&gt;具体解决步骤：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/ros/rosdistro.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;我这里是克隆到/home/k/ROS/&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在本地rosdistro中搜索20-default.list，将其url由raw.githubusercontent.com/…指向本地repo；&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;格式为：file:///home/k/ROS/rosdistro/…注意具体的文件夹关系&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;类似的，搜索rosdep2和rosdistro中出现raw.githubusercontent.com的位置，将其指向本地repo。&lt;/p&gt;
+
+    &lt;p&gt;这里我修改的文件路径依次为：&lt;/p&gt;
+
+    &lt;p&gt;/usr/lib/python2.7/dist-packages/rosdep2/下面的sources_list.py, rep3.py, gbpdistro_support.py&lt;/p&gt;
+
+    &lt;p&gt;以及/usr/lib/python2.7/dist-packages/rosdistro/ &lt;strong&gt;init&lt;/strong&gt;.py&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h6 id=&quot;注意1每个文件修改前都要进行sudo-chmod-777处理使之可以修改&quot;&gt;注意1：每个文件修改前都要进行sudo chmod 777处理，使之可以修改&lt;/h6&gt;
+
+&lt;h6 id=&quot;注意2下载文件夹路径最好正常点避开空格中文之类的&quot;&gt;注意2：下载文件夹路径最好正常点，避开空格、中文之类的&lt;/h6&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Traceback (most recent call last): File &quot;/usr/bin/rosdep&quot;, line 3, in &amp;lt;module&amp;gt; from rosdep2.main import rosdep_main ImportError: No module named 'rosdep2'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;解决方案：将Ubuntu默认python版本设置为2.7。&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name>Keenster</name></author><summary type="html">项目原因，开始自学ros系统，本文展示了在ubuntu18.04上安装ros melodic的具体方法及可能会遇到的坑。</summary></entry><entry><title type="html">ROS学习（二）ROS基本了解和基本测试</title><link href="http://keenster.cn/2020/04/26/ros_2_study/" rel="alternate" type="text/html" title="ROS学习（二）ROS基本了解和基本测试" /><published>2020-04-26T00:00:00+00:00</published><updated>2020-04-26T00:00:00+00:00</updated><id>http://keenster.cn/2020/04/26/ros_2_study</id><content type="html" xml:base="http://keenster.cn/2020/04/26/ros_2_study/">&lt;p&gt;接着上一讲。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;可能用到的链接&quot;&gt;可能用到的链接&lt;/h2&gt;
+
+&lt;p&gt;【视频】中科院软件所-机器人操作系统入门&lt;a href=&quot;https://www.bilibili.com/video/BV1mJ411R7Ni?p=2&quot;&gt;https://www.bilibili.com/video/BV1mJ411R7Ni?p=2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;【IDE】roboware的安装和基础&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/flyinggod/p/11444353.html&quot;&gt;https://www.cnblogs.com/flyinggod/p/11444353.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;【cnblog】Ubuntu 18.04 + ROS Melodic + TurtleBot3仿真&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/raina/p/12162435.html&quot;&gt;https://www.cnblogs.com/raina/p/12162435.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;【知乎】ROS机器人实例-TurtleBot&lt;strong&gt;&lt;em&gt;（1和3都有）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/35822939&quot;&gt;https://zhuanlan.zhihu.com/p/35822939&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;视频笔记：&lt;/p&gt;
+
+&lt;h4 id=&quot;ros中没有进程的概念只有节点noderos就是提供了一套框架来管理这些node&quot;&gt;ros中没有进程的概念，只有节点（node），ros就是提供了一套框架来管理这些node&lt;/h4&gt;
+
+&lt;h4 id=&quot;ros工程框架中的最高级catkin工作空间&quot;&gt;ros工程框架中的最高级：catkin工作空间&lt;/h4&gt;
+
+&lt;p&gt;建立工作空间并编译：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;  ~/catkin_ws/src
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/catkin_ws
+catkin_make
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; 【src路径】/devel/setup.bash（编译完成后刷新
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;src→build→devel（目标文件）&lt;/p&gt;
+
+&lt;p&gt;src下面有很多package，他是编译的基本单元&lt;/p&gt;
+
+&lt;p&gt;package里至少要有cmakelists.txt（编译规则）还有package.xml（自我描述）&lt;/p&gt;
+
+&lt;p&gt;可以放代码文件夹&lt;/p&gt;
+
+&lt;p&gt;scripts(&lt;em&gt;.py,&lt;/em&gt;.sh)&lt;/p&gt;
+
+&lt;p&gt;include(.h)&lt;/p&gt;
+
+&lt;p&gt;src(.cpp)&lt;/p&gt;
+
+&lt;p&gt;可以放通信格式的文件夹&lt;/p&gt;
+
+&lt;p&gt;srv&lt;/p&gt;
+
+&lt;p&gt;msg&lt;/p&gt;
+
+&lt;p&gt;action&lt;/p&gt;
+
+&lt;p&gt;配置文件config（*.yaml)&lt;/p&gt;
+
+&lt;p&gt;launch&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/ros工程架构.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;常用指令&quot;&gt;常用指令：&lt;/h3&gt;
+
+&lt;p&gt;rospack find package_name查找包的地址&lt;/p&gt;
+
+&lt;p&gt;rospack list 列出所有本地包&lt;/p&gt;
+
+&lt;p&gt;roscd package_name 直接跳到pkg的路径&lt;/p&gt;
+
+&lt;p&gt;rosls package_name 相当于ls&lt;/p&gt;
+
+&lt;p&gt;rosed package_name file_name 编辑pkg中的文件 相当于vim&lt;/p&gt;
+
+&lt;p&gt;catkin_create_pkg &lt;pkg_name&gt; [deps] 创建package&lt;/pkg_name&gt;&lt;/p&gt;
+
+&lt;p&gt;rosdep install … 安装包依赖&lt;/p&gt;
+
+&lt;h2 id=&quot;turtlebot3学习&quot;&gt;turtlebot3学习&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/turtlebot/turtlebot&quot;&gt;github官方地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最快的安装方法：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ros-melodic-turtlebot3-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最快的测试方法(gazebo模拟+键盘控制运动）：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TURTLEBOT3_MODEL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;burger
+roslaunch turtlebot3_gazebo turtlebot3_world.launch
+（新开一个终端）
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/turtlebot3测试.png&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最后我们把”export TURTLEBOT3_MODEL=burger”添加到.bashrc文件, 免得每次重新设置这个变量:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;export TURTLEBOT3_MODEL=burger&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;  ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Keenster</name></author><summary type="html">接着上一讲。</summary></entry><entry><title type="html">Unity中自动计算含mesh的子对象包围盒</title><link href="http://keenster.cn/2020/04/16/Unity_How_to_get_bounding_box_of_all_mesh_in_a_prefab/" rel="alternate" type="text/html" title="Unity中自动计算含mesh的子对象包围盒" /><published>2020-04-16T00:00:00+00:00</published><updated>2020-04-16T00:00:00+00:00</updated><id>http://keenster.cn/2020/04/16/Unity_How_to_get_bounding_box_of_all_mesh_in_a_prefab</id><content type="html" xml:base="http://keenster.cn/2020/04/16/Unity_How_to_get_bounding_box_of_all_mesh_in_a_prefab/">&lt;p&gt;当你在unity中加载一个prefab预置模型，并想对它添加碰撞体时，发现这个prefab的center与面片中心并不重合，这时可以通过代码，把没有MeshRenderer的空白子物体去除。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;代码如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//本函数用于矫正collider到父物体中心,made by Keenster&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;renderTrueCollider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Transform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; 	&lt;span class=&quot;n&quot;&gt;gameObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postion&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Quaternion&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quaternion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Euler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;one&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 
+        &lt;span class=&quot;n&quot;&gt;Collider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;colliders&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetComponentsInChildren&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Collider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Collider&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;colliders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;nf&quot;&gt;DestroyImmediate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;center&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;renders&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetComponentsInChildren&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Renderer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;renders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;center&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;center&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;/=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetComponentsInChildren&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Bounds&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Renderer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;renders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Encapsulate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;   
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;BoxCollider&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;boxCollider&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gameObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BoxCollider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;boxCollider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;center&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;boxCollider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Transform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;child0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Translate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;初始：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-04-16_234955.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;脚本施用后：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-04-16_235041.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://microsoft.github.io/MixedRealityToolkit-Unity/Documentation/README_BoundingBox.html&quot;&gt;官方Guide-BoundingBox&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.xuanyusong.com/archives/3461&quot;&gt;雨松MOMO-自动计算所有子对象包围盒&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文章最后编辑于20200416&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">当你在unity中加载一个prefab预置模型，并想对它添加碰撞体时，发现这个prefab的center与面片中心并不重合，这时可以通过代码，把没有MeshRenderer的空白子物体去除。</summary></entry><entry><title type="html">Hololens2开发 (二) 基本输入探索（语音、手势、眼动）</title><link href="http://keenster.cn/2020/04/11/Hololens2_2_basic_input/" rel="alternate" type="text/html" title="Hololens2开发 (二) 基本输入探索（语音、手势、眼动）" /><published>2020-04-11T00:00:00+00:00</published><updated>2020-04-11T00:00:00+00:00</updated><id>http://keenster.cn/2020/04/11/Hololens2_2_basic_input</id><content type="html" xml:base="http://keenster.cn/2020/04/11/Hololens2_2_basic_input/">&lt;p&gt;本系列建立在课题组项目中，可能并不是很全面，最全的教程还是要啃官网。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;package导入设置&quot;&gt;Package导入设置&lt;/h2&gt;
+
+&lt;p&gt;需要导入的Package有：&lt;/p&gt;
+
+&lt;p&gt;Microsoft.MixedReality.Toolkit.Unity.Foundation.2.3.0（基本）&lt;/p&gt;
+
+&lt;p&gt;Microsoft.MixedReality.Toolkit.Unity.Examples.2.3.0（方便改项目参考）&lt;/p&gt;
+
+&lt;p&gt;Microsoft.MixedReality.Toolkit.Unity.Tools.2.3.0（这个先前忘记了，想要导出Appx包的话必须要加这个包）&lt;/p&gt;
+
+&lt;h2 id=&quot;语音输入&quot;&gt;语音输入&lt;/h2&gt;
+
+&lt;p&gt;Hololens2中加入了普通话识别，这时不开发语音怎么行？😄&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在MixedRealityInputSystem中的Speech-&amp;gt;Speech Commands里输入指令集合&lt;/li&gt;
+  &lt;li&gt;在需要控制的物体上挂载Speech Input Handler，以及包含控制函数的脚本，在handler面板中将指令词与控制函数一一对应，并调节其他参数&lt;/li&gt;
+  &lt;li&gt;Unity中可直接控制，模拟器上把语言改成中文即可控制&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;眼动控制&quot;&gt;眼动控制&lt;/h2&gt;
+
+&lt;p&gt;眼动控制修改的主要有三块地方——&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;修改MixedRealityToolkit中的InputSimulation/InputActions/Pointer为Eyetrackingdemo中使用的profile，或者直接用Assets/MixedRealityToolkit.Examples/Demos/EyeTracking/General/Profiles/EyeTrackingDemoConfigurationProfile.asset里的EyeTrackingDemoConfigurationProfile&lt;/li&gt;
+  &lt;li&gt;将EyeTrackingDemos ManagerComponents.prefab添加到场景中，该预制体中包含了部分语音控制和一个鼠标Cursor&lt;/li&gt;
+  &lt;li&gt;选择接收眼动控制的物体Targets，挂载脚本&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Target上可以挂的脚本：&lt;/p&gt;
+
+&lt;p&gt;自定义动作：EyeTrackingTarget&lt;/p&gt;
+
+&lt;p&gt;想让物体被视线选中拖动（如进度条）：MoveObjByEyeGaze&lt;/p&gt;
+
+&lt;p&gt;被盯住的反馈（比如变个色）：OnLookAtShowHoverFeedback&lt;/p&gt;
+
+&lt;h2 id=&quot;调试中遇到的问题&quot;&gt;调试中遇到的问题&lt;/h2&gt;
+
+&lt;p&gt;appx导出时Reference rewriter: Error: field &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;System.Numerics.Vector3 Windows.Perception.People.HandMeshVertex::Position&lt;/code&gt; doesn’t exist in target framework….&lt;/p&gt;
+
+&lt;p&gt;本文章最后编辑于20200304&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">本系列建立在课题组项目中，可能并不是很全面，最全的教程还是要啃官网。</summary></entry><entry><title type="html">(持续更新)-Windows实用小工具安装方法合集</title><link href="http://keenster.cn/2020/04/11/windows_tools_install_continus/" rel="alternate" type="text/html" title="(持续更新)-Windows实用小工具安装方法合集" /><published>2020-04-11T00:00:00+00:00</published><updated>2020-04-11T00:00:00+00:00</updated><id>http://keenster.cn/2020/04/11/windows_tools_install_continus</id><content type="html" xml:base="http://keenster.cn/2020/04/11/windows_tools_install_continus/">&lt;p&gt;不管你是用win还是Linux，都有很多工具是需要安装的，比如办公/娱乐/效率/系统管理等。我不打算开太多章节，只从安装的角度，说一下这些东西怎么装。对于装机时间较为充裕的朋友，可以做个参考。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;1系统美化&quot;&gt;1.系统美化&lt;/h2&gt;
+
+&lt;h3 id=&quot;壁纸&quot;&gt;壁纸&lt;/h3&gt;
+
+&lt;h4 id=&quot;pybingwallpaper自动获取必应每日壁纸&quot;&gt;PyBingWallpaper自动获取必应每日壁纸&lt;/h4&gt;
+
+&lt;p&gt;https://github.com/genzj/pybingwallpaper&lt;/p&gt;
+
+&lt;h3 id=&quot;锁屏&quot;&gt;锁屏&lt;/h3&gt;
+
+&lt;h5 id=&quot;联想锁屏真的很美&quot;&gt;联想锁屏（真的很美）&lt;/h5&gt;
+
+&lt;p&gt;https://suoping.lenovo.com.cn/&lt;/p&gt;
+
+&lt;h2 id=&quot;2办公提效&quot;&gt;2.办公提效&lt;/h2&gt;
+
+&lt;h3 id=&quot;使用ipad作为副屏&quot;&gt;使用ipad作为副屏&lt;/h3&gt;
+
+&lt;h4 id=&quot;duet&quot;&gt;duet&lt;/h4&gt;
+
+&lt;p&gt;https://www.duetdisplay.com/&lt;/p&gt;
+
+&lt;h3 id=&quot;桌面整理&quot;&gt;桌面整理&lt;/h3&gt;
+
+&lt;h5 id=&quot;桌面课表schedule&quot;&gt;桌面课表Schedule&lt;/h5&gt;
+
+&lt;p&gt;https://download.pchome.net/industry/education/detail-30780.html&lt;/p&gt;
+
+&lt;h5 id=&quot;桌面归纳fences&quot;&gt;桌面归纳Fences&lt;/h5&gt;
+
+&lt;h2 id=&quot;3未完待续&quot;&gt;3.未完待续&lt;/h2&gt;</content><author><name>Keenster</name></author><summary type="html">不管你是用win还是Linux，都有很多工具是需要安装的，比如办公/娱乐/效率/系统管理等。我不打算开太多章节，只从安装的角度，说一下这些东西怎么装。对于装机时间较为充裕的朋友，可以做个参考。</summary></entry><entry><title type="html">Hololens2 初探秘手册</title><link href="http://keenster.cn/2020/02/29/Hololens2_1_bugs_in_hololens2_environment_configuration/" rel="alternate" type="text/html" title="Hololens2 初探秘手册" /><published>2020-02-29T00:00:00+00:00</published><updated>2020-02-29T00:00:00+00:00</updated><id>http://keenster.cn/2020/02/29/Hololens2_1_bugs_in_hololens2_environment_configuration</id><content type="html" xml:base="http://keenster.cn/2020/02/29/Hololens2_1_bugs_in_hololens2_environment_configuration/">&lt;p&gt;微软Hololens 2是微软公司研发的混合现实头显。虽然现在还没货，但是可以研究一下。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h5 id=&quot;硬件部分扫盲&quot;&gt;硬件部分扫盲&lt;/h5&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;后方旋钮调节头带长度&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;左侧亮度&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;右侧音量&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用时间2-3h，待机2周&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;重量566g&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;应尽量不触摸面罩&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h5 id=&quot;使用-基操&quot;&gt;使用-基操&lt;/h5&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;强制重启：长按10s&lt;/li&gt;
+  &lt;li&gt;睡眠：3min&lt;/li&gt;
+  &lt;li&gt;开始手势：双手——请伸出你的手，掌心朝向自己。 你将看到&lt;strong&gt;开始图标&lt;/strong&gt;显示在手腕内侧。 使用另一只手点击此图标。单手——伸出一只手，掌心朝向自己。 你将看到&lt;strong&gt;开始图标&lt;/strong&gt;显示在手腕内侧，注视图标并捏合食指拇指。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;重要文档归类及调试注意事项&quot;&gt;重要文档归类及调试注意事项&lt;/h4&gt;
+
+&lt;h5 id=&quot;官方对hololens2和1的新手教程文档页面非编程仅为原理和使用&quot;&gt;官方对Hololens2和1的新手教程文档页面（非编程，仅为原理和使用）&lt;/h5&gt;
+
+&lt;p&gt;https://docs.microsoft.com/zh-cn/hololens/hololens2-hardware&lt;/p&gt;
+
+&lt;h5 id=&quot;官方hololens2emulator使用方法&quot;&gt;官方Hololens2emulator使用方法&lt;/h5&gt;
+
+&lt;p&gt;https://docs.microsoft.com/en-us/windows/mixed-reality/using-the-hololens-emulator&lt;/p&gt;
+
+&lt;p&gt;安装重点1：首先需要在控制面板-程序与功能-启用或关闭Windows功能-勾选Hyper-V，若看不到Hyper-V，可能是因为系统是家庭版本。解决方法是将以下代码保存为.cmd格式运行，之后按提示重启电脑。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;pushd&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%~dp0&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt; /b %SystemRoot%&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;ervicing&lt;span class=&quot;se&quot;&gt;\P&lt;/span&gt;ackages&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt;Hyper-V&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.mum &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;hyper-v.txt
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; /f %%i &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'findstr /i . hyper-v.txt 2^&amp;gt;nul'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;dism /online /norestart /add-package:&lt;span class=&quot;s2&quot;&gt;&quot;%SystemRoot%&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ervicing&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\P&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ackages&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\%&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;%i&quot;&lt;/span&gt;
+del hyper-v.txt
+Dism /online /enable-feature /featurename:Microsoft-Hyper-V-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;重点2：BIOS中确认如果有以下的项，将其激活。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-Hardware-assisted virtualization
+-Second Level Address Translation (SLAT)
+-Hardware-based Data Execution Prevention (DEP)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/hololenstest1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;emulator里的系统菜单可用F2打开。&lt;/p&gt;
+
+&lt;p&gt;如何安装程序包：右侧进入Panel，里面有APP的部分，安装时注意要安装合适的Dependencies，比如这个模拟器好像是x64的，装其他比如ARM的框架会失败。&lt;/p&gt;
+
+&lt;p&gt;如何将unity中的scene导出到hololens2 emulator 运行：&lt;/p&gt;
+
+&lt;p&gt;首先打开build settings，按数字顺序进行设置，我的unity版本是2019.1.0a12. 注意，第一次点击“Universial Windows Platform”时，可能会需要提前安装 UnitySetup-Universal-Windows-Platform-Support-for-Editor-2019.1.0a12.exe 这个东西，否则不会出这个界面。然后要注意第一步设置一定要选择合适的版本，下面的那几个对号要打上，否则在vs中打开时不会提示使用simulator运行。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174725.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;build出来之后，文件结构是这个样子的&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_175110.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;使用vs打开sln，然后就可以看到模拟器啦，直接点击模拟器，编译通过后就可以在上面跑程序啦&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174945.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-03-04_174424.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;官方unity插件-mixedrealitytoolkitmrtk的github页&quot;&gt;官方unity插件-MixedRealityToolkit（MRTK）的github页&lt;/h5&gt;
+
+&lt;p&gt;https://github.com/microsoft/MixedRealityToolkit-Unity&lt;/p&gt;
+
+&lt;h5 id=&quot;官方关于mrtk-examples-hub的github介绍页&quot;&gt;官方关于MRTK Examples Hub的github介绍页&lt;/h5&gt;
+
+&lt;p&gt;https://github.com/microsoft/MixedRealityToolkit-Unity/blob/mrtk_development/Documentation/README_ExampleHub.md&lt;/p&gt;
+
+&lt;p&gt;下图是官方的appbundle在emulator中的运行情况&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/hololenstest02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不知道怎么调视角（&lt;/p&gt;
+
+&lt;h4 id=&quot;开发踩坑&quot;&gt;开发踩坑&lt;/h4&gt;
+
+&lt;h5 id=&quot;unity导包后报错-feature-xxx-cannot-be-used-because-it-is-not-part-of-the-c-40&quot;&gt;unity导包后报错 Feature ‘xxx’ cannot be used because it is not part of the C# 4.0&lt;/h5&gt;
+
+&lt;p&gt;https://blog.csdn.net/HarryXYC/article/details/89462647&lt;/p&gt;
+
+&lt;p&gt;在Unity选择【Edit】——【Project Settings】——【Player】——【Other Settings】——【Configuration】大项下的【Scripting Runtime Version】选项选择【.NET 4.x Equivalent】即可解决问题。&lt;/p&gt;
+
+&lt;h5 id=&quot;vs-错误-将环境变量--tracedesigntime-设置为-true-解决方案&quot;&gt;vs 错误 将环境变量 “ TraceDesignTime” 设置为 true 解决方案&lt;/h5&gt;
+
+&lt;p&gt;https://ourcodeworld.com/articles/read/414/visual-studio-2017-ide0006-compiler-error-encountered-while-loading-the-project&lt;/p&gt;
+
+&lt;h4 id=&quot;备用优秀教程&quot;&gt;备用优秀教程&lt;/h4&gt;
+
+&lt;h5 id=&quot;unity3d项目移植uwp平台踩坑经验总结&quot;&gt;Unity3D项目移植UWP平台踩坑经验总结&lt;/h5&gt;
+
+&lt;p&gt;https://zhuanlan.zhihu.com/p/63424435&lt;/p&gt;
+
+&lt;p&gt;本文章最后编辑于20200304&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">微软Hololens 2是微软公司研发的混合现实头显。虽然现在还没货，但是可以研究一下。</summary></entry><entry><title type="html">使用星空CDN和JSDelivr CDN对GithubPage未备案.cn域名进行全站加速</title><link href="http://keenster.cn/2020/02/27/make_my_githubpage_faster_with_free_cdn/" rel="alternate" type="text/html" title="使用星空CDN和JSDelivr CDN对GithubPage未备案.cn域名进行全站加速" /><published>2020-02-27T00:00:00+00:00</published><updated>2020-02-27T00:00:00+00:00</updated><id>http://keenster.cn/2020/02/27/make_my_githubpage_faster_with_free_cdn</id><content type="html" xml:base="http://keenster.cn/2020/02/27/make_my_githubpage_faster_with_free_cdn/">&lt;p&gt;常言道，时间就是金钱。网站的加载时间从30秒提到了3秒。在这里分享一下方法。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;写在前面&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;本篇博客是对githubpage进行域名解析后在国内渣访问速度的一种贫穷的补救尝试。若您有条件的话，建议购买已经备案的域名，这样可以享受到国内cdn（如又拍、腾讯）的免费服务；或者购买国内的域名+服务器，并老老实实备案。若您的服务器在海外且是公有的（比如github，很多个人共用几个ip），又购买了.cn这种在国内必须备案的顶级域名，那么你可能需要寻找国外的cdn，或者国内的免备案cdn了，总之，让你的域名对应的节点不在国内，但大大提高连接各大运营商的速度。&lt;/p&gt;
+
+&lt;p&gt;我花了一天来寻找这样的东西，但酒香不怕巷子深。在尝试了某御云，freexxx之后，我找到了一个前期免费，后期便宜，无需备案，速度还凑合，回源ip可以直接设置为github.io域名的的国内小型cdn供应商——星空CDN。&lt;/p&gt;
+
+&lt;p&gt;接着，由于网站第一次打开的时候需要加载一些资源，找到了专门针对github优化的免费cdn：JSDelivr，通过修改每一个静态资源的加载地址，进一步提高了速度。&lt;/p&gt;
+
+&lt;h2 id=&quot;星空cdn使用方法&quot;&gt;星空CDN使用方法&lt;/h2&gt;
+
+&lt;p&gt;官网为https://www.xkcdn.cn/，看起来很简洁&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_004802.png&quot; alt=&quot;官网&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;注册后，会赠送1元，可以在“套餐管理”选择1个月的“免费体验包”（很棒的一点是，这个包是可以续费的，也是1块钱一个月，流量10G，像我这种博客没人看的新博主够用了）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_013202.png&quot; alt=&quot;购买&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;买完后进入产品管理-域名管理，添加域名（keenster.cn）和加上www的域名，方便用户的不同输入习惯。&lt;/p&gt;
+
+&lt;p&gt;这里截一下我的其中一个域名设置，注意源站ip是非常重要的，有服务器当然填你的服务器，但如果是像 github page 这样的，甚至可以写成博客的原始域名！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_152045.png&quot; alt=&quot;域名设置&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;保存后，进入产品管理-解析管理&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_013813.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;复制 CNAME 区域，然后到达你的域名供应商（比如我这里是腾讯云），进入域名解析，删掉现有解析，添加下图的两条CNAME解析。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_081729.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;后面等待解析生效就ok，一般都是秒ok&lt;/p&gt;
+
+&lt;h2 id=&quot;jsdelivr-cdn使用方法&quot;&gt;JSDelivr CDN使用方法&lt;/h2&gt;
+
+&lt;p&gt;参考博客为https://www.jianshu.com/p/57f56fb4f219&lt;/p&gt;
+
+&lt;p&gt;官网：https://www.jsdelivr.com/，但实际上不需要登录这个网站，只需要在你每个html的代码中修改资源的加载路径，规则如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://links.jianshu.com/go?to=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2F&quot;&gt;https://cdn.jsdelivr.net/gh/&lt;/a&gt;你的用户名/你的仓库名@发布的版本号/文件路径&lt;/p&gt;
+
+&lt;p&gt;比如可以在site下新建一个cdnurl，值为https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io&lt;/p&gt;
+
+&lt;p&gt;然后某个资源的加载可以写成&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery-ui.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;打开速度测试&quot;&gt;打开速度测试&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-28_143656.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在家里秒开&lt;/p&gt;
+
+&lt;h3 id=&quot;可能出现的问题&quot;&gt;可能出现的问题&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;githubpage报502错误，这个问题出现了一次。&lt;/p&gt;
+
+    &lt;p&gt;解决方案：浏览器中使用快捷键&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CTRL+F5&lt;/code&gt;从服务器刷新缓存。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;第一次加载速度非常慢。&lt;/p&gt;
+
+    &lt;p&gt;经排查是因为我的源站ssl选项选的是http，改成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http+https（协议跟随模式）&lt;/code&gt;即可。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Keenster</name></author><summary type="html">常言道，时间就是金钱。网站的加载时间从30秒提到了3秒。在这里分享一下方法。</summary></entry><entry><title type="html">linux的cuda突然报cuda initialization failure with error 100的解决方案</title><link href="http://keenster.cn/2020/02/12/how_to_deal_with_cuda_communication-problem/" rel="alternate" type="text/html" title="linux的cuda突然报cuda initialization failure with error 100的解决方案" /><published>2020-02-12T00:00:00+00:00</published><updated>2020-02-12T00:00:00+00:00</updated><id>http://keenster.cn/2020/02/12/how_to_deal_with_cuda_communication%20problem</id><content type="html" xml:base="http://keenster.cn/2020/02/12/how_to_deal_with_cuda_communication-problem/">&lt;p&gt;VIDIA-SMI has failed because it couldn’t communicate with the NVIDIA driver.
+我就关了个电脑。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;个人解决方案如下可能不适合于所有情况&quot;&gt;个人解决方案如下，可能不适合于所有情况&lt;/h3&gt;
+
+&lt;h4 id=&quot;首先在终端中输入nvcc--v命令&quot;&gt;首先，在终端中输入nvcc -V命令&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-12%2013-45-17%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png&quot; alt=&quot;终端图1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如图 ，表示cuda正常安装，因此考虑nvidia驱动问题。&lt;/p&gt;
+
+&lt;p&gt;####&lt;/p&gt;
+
+&lt;h4 id=&quot;接下来输入nvidia-smi没有出现驱动信息考虑重装驱动&quot;&gt;接下来，输入nvidia-smi，没有出现驱动信息，考虑重装驱动。&lt;/h4&gt;
+
+&lt;h4 id=&quot;打开软件与更新进入附加驱动发现驱动被改成nvidia_driver_418了重新改到430并点击-应用更改进行安装&quot;&gt;打开“软件与更新”，进入“附加驱动”，发现驱动被改成nvidia_driver_418了，重新改到430，并点击 应用更改，进行安装。&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-12%2014-07-23%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png&quot; alt=&quot;软件和更新&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;最后输入nvidia-smi可以看到出现了配置信息&quot;&gt;最后，输入nvidia-smi，可以看到出现了配置信息&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-02-12%2014-50-01%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png&quot; alt=&quot;终端&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;重新运行程序，问题解决&lt;/p&gt;
+
+&lt;p&gt;本文首次使用腾讯云图床，看看能否提高加载速度&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">VIDIA-SMI has failed because it couldn’t communicate with the NVIDIA driver. 我就关了个电脑。</summary></entry><entry><title type="html">使用心阶云实现全平台科学上网</title><link href="http://keenster.cn/2020/01/16/scientific_internet_access/" rel="alternate" type="text/html" title="使用心阶云实现全平台科学上网" /><published>2020-01-16T00:00:00+00:00</published><updated>2020-01-16T00:00:00+00:00</updated><id>http://keenster.cn/2020/01/16/scientific_internet_access</id><content type="html" xml:base="http://keenster.cn/2020/01/16/scientific_internet_access/">&lt;p&gt;不管你是做科研，还是做工程，总有登录外网的需求，这里分享一个快速解决方案。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;直接上步骤&quot;&gt;直接上步骤&lt;/h3&gt;
+
+&lt;h4 id=&quot;首先通过这个链接注册一个心阶云账号可以选择试用或者购买高速套餐据本人评测相对比较实惠流量也够推荐按量购买&quot;&gt;首先，通过&lt;a href=&quot;https://www.xinjiecloud.vip/auth/register?code=Dho7xaD8sx58xop9cPjaU2wiGt4wMl6o&quot;&gt;这个链接&lt;/a&gt;注册一个心阶云账号，可以选择试用或者购买高速套餐（据本人评测相对比较实惠，流量也够，推荐按量购买）&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://qq849012418.github.io/images/posts/tool/xinjiecloud.png&quot; alt=&quot;这么好看的介面&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://qq849012418.github.io/images/posts/tool/xinjiecloud2.png&quot; alt=&quot;snapshot&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;接下来就是各个平台需要下载的软件和操作教程&quot;&gt;接下来，就是各个平台需要下载的软件和&lt;a href=&quot;http://www.心阶.xyz/user/tutorial&quot;&gt;操作教程&lt;/a&gt;。&lt;/h4&gt;
+
+&lt;h4 id=&quot;windows&quot;&gt;Windows&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://mirrors.ohmy.cat/Windows/SSR-win.4.9.2.zip&quot;&gt;SSRR&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;macos&quot;&gt;MacOS&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://mirrors.ohmy.cat/MacOS/ssr-mac.dmg&quot;&gt;ShadowsocksX-NG-R8&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;linuxgui版&quot;&gt;Linux（GUI版)&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/qingshuisiyuan/electron-ssr-backup/releases&quot;&gt;electron-ssr&lt;/a&gt;（github）&lt;/p&gt;
+
+&lt;h4 id=&quot;ios&quot;&gt;IOS&lt;/h4&gt;
+
+&lt;p&gt;Shadowrocket (需要使用美国appleid下载，或在心阶云内获取账户密码下载)&lt;/p&gt;
+
+&lt;h4 id=&quot;android&quot;&gt;Android&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://mirrors.ohmy.cat/Android/ssr-android.apk&quot;&gt;ssr&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;如果您找到了可以用的ss或ssr账号，上面这些软件依然可以使用，无需使用本文推荐的网站。实际上，这类网站很多，大多规模较小，可货比三家。&lt;/p&gt;</content><author><name>Keenster</name></author><summary type="html">不管你是做科研，还是做工程，总有登录外网的需求，这里分享一个快速解决方案。</summary></entry></feed>

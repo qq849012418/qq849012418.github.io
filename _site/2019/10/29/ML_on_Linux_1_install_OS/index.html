@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统 &mdash; KEENSTER.CN</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/collection.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/common.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://keenster.cn/2019/10/29/ML_on_Linux_1_install_OS/">
+    <link rel="alternate" type="application/atom+xml" title="KEENSTER.CN" href="http://keenster.cn/feed.xml">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/favicon.ico">
+    
+    <meta property="og:title" content="从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统">
+      
+    <meta name="keywords" content="linux, windows, ununtu, ssd">
+    <meta name="og:keywords" content="linux, windows, ununtu, ssd">
+      
+    <meta name="description" content="第一篇小文章。">
+    <meta name="og:description" content="第一篇小文章。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://keenster.cn/2019/10/29/ML_on_Linux_1_install_OS/">
+    <meta property="og:site_name" content="KEENSTER.CN">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2019-10-29">
+    
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/main.js"></script>
+
+        
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://keenster.cn/" title="KEENSTER.CN"><span class="octicon octicon-mark-github"></span> KEENSTER.CN</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://keenster.cn/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://keenster.cn/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://keenster.cn/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://keenster.cn/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://keenster.cn/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="从零开始的机器学习平台配置（一">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/10/29
+            &nbsp;<span id="/2019/10/29/ML_on_Linux_1_install_OS/" class="leancloud_visitors" data-flag-title="从零开始的机器学习平台配置（一）Windows制作linux启动u盘并在移动固态硬盘上安装系统"> - </span>&nbsp;views
+          </span>
+          
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://keenster.cn/categories/#Linux" title="Linux">Linux</a>
+          </span>
+          
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>第一篇小文章。</p>
+
+<hr />
+
+<h2 id="0有一说一jpg">0.有一说一.JPG</h2>
+
+<p>背景：在笔者经历了<code class="language-plaintext highlighter-rouge">rm rf</code> 惨案之后，下定决心重新折腾一遍系统和环境，供自己以后回忆，并供感兴趣的萌新参考学习。力争易复现，少出毛病，让linux系统成为各位的重要武器。</p>
+
+<p>目标：ubuntu18.04+显卡和摄像头驱动+anaconda3+opencv4.1.2+clion2019+pycharm2019+cuda10.1+pytorch+tensorrt+torch2trt+git+办公软件+系统备份</p>
+
+<p>硬件条件：一个64GB的u盘，一个128GB的移动ssd。</p>
+
+<p>注意：本系列只是实现方式的一种，并不适合只想快速体验下linux的用户。若本系列对您有帮助，欢迎备注转载，或与作者联系，共同学习。</p>
+
+<h2 id="1-前期工作">1. 前期工作</h2>
+
+<h3 id="系统下载">系统下载</h3>
+
+<p>网易镜像：http://mirrors.163.com/ubuntu-releases/18.04/，选择<code class="language-plaintext highlighter-rouge">ubuntu-18.04.3-desktop-amd64.iso</code></p>
+
+<h3 id="启动盘制作工具">启动盘制作工具</h3>
+
+<p>参考了文献1，采用UltraISO，搜索下载试用即可。</p>
+
+<h2 id="2启动盘制作">2.启动盘制作</h2>
+
+<p>如图，双击.iso文件打开，选择启动→写入硬盘映像→写入，等一会儿，ok。</p>
+
+<p><img src="https://qq849012418.github.io/images/posts/linux/image-20191029102616165.png" alt="image-20191029102616165" /></p>
+
+<p><img src="https://qq849012418.github.io/images/posts/linux/image-20191029104520402.png" alt="image-20191029104520402" /></p>
+
+<p>至此，u盘预处理完毕，484很简单（</p>
+
+<p>对了，硬盘不需要预处理。</p>
+
+<h2 id="3bios的简单修改">3.BIOS的简单修改</h2>
+
+<p>插上U盘和移动硬盘，开机进入boot，我的机械革命是按F2，联想小新也是，其他品牌请百度。</p>
+
+<p>把security boot关了</p>
+
+<p>把启动引导的第一个改成u盘</p>
+
+<p>保存重启，进入Linux grub界面，选择install ubuntu。</p>
+
+<h2 id="4系统安装">4.系统安装</h2>
+
+<p>说一些注意事项，参考文献3.</p>
+
+<ol>
+  <li>安装类型选择其他选项，然后不联网，完整安装，不安装第三方软件。</li>
+  <li>在分区页面设置efi（800M)，交换空间(8g)和ext4文件系统（剩下的全部容量，挂载点“/”）三个区。</li>
+  <li>引导文件放置的设备直接选到移动硬盘即可，不要选到下面的分区。</li>
+  <li>示意图：</li>
+</ol>
+
+<p><img src="https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/a50fd139b439f1c376b8a866d067191.jpg" alt="" /></p>
+
+<p><img src="https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/d320171196c00900606332ae01e1eb4.jpg" alt="" /></p>
+
+<h2 id="5再次修改bios该步骤还需优化">5.再次修改BIOS（该步骤还需优化）</h2>
+
+<p>系统安装完后，重启进入BIOS，把硬盘中的第一位引导由windows boot manager改为ubuntu（可能会有两个ubuntu，一个是命令行，一个是图形化界面，选到图形化的那个）</p>
+
+<h2 id="6可能遇到的问题">6.可能遇到的问题</h2>
+
+<h3 id="有nvidia显卡的笔记本可能会卡在紫屏界面进不去桌面">有nvidia显卡的笔记本可能会卡在紫屏界面进不去桌面</h3>
+
+<p>临时进入桌面：grub界面按e进入编辑界面， 找到“quiet splash _ _ <em>”,将后面的“</em> _ _”删掉,空一格,然后添加<code class="language-plaintext highlighter-rouge">“$vt_handoff acpi_osi=linux nomodeset”</code>,然后按F10保存 ，即可进入系统。（这个操作是一次性的）</p>
+
+<p>进入系统后，如果后面不需要跑cuda，在“软件和更新-附加驱动”中选择推荐的nvidia驱动下载安装。若找不到驱动，试一试切换下载源，然后sudo apt-get update一波。</p>
+
+<p><img src="https://qq849012418.github.io/images/posts/linux/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="2019-10-31 00-46-19 的屏幕截图" /></p>
+
+<p><img src="https://qq849012418.github.io/images/posts/linux/2019-10-31%2000-46-19%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-1572454271471.png" alt="2019-10-31 00-46-19 的屏幕截图" /></p>
+
+<p>装好nvidia，咱也不能放过默认的显卡驱动nouveau。根据文献4，我们做以下操作：</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">sudo gedit /etc/modprobe.d/blacklist-nouveau.conf</code></strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">#添加下列两行</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">blacklist nouveau</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">options nouveau modeset=0</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">#重新生成 kernel initramfs</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">update-initramfs –u</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">#重启</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">reboot</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">#重启后验证驱动是否被禁用 如果无结果显示则表明成功禁用</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">lsmod | grep nouveau</code></p>
+
+<h3 id="我的linux为何一直处于飞行模式wifi无法打开">我的linux为何一直处于飞行模式，wifi无法打开</h3>
+
+<p>这种情况，首先回windows看一看，你在windows下wifi能不能正常工作。</p>
+
+<p><strong>若不能，网上大多数解决方案可能不适合你!</strong>进入BIOS，尝试重置一下(机械革命为F3重置，F4退出)，然后，很可能wifi就出现了！</p>
+
+<p>否则，考虑驱动问题，参考下面的文章，此处不过多陈述。</p>
+
+<p>https://blog.csdn.net/weixin_41762173/article/details/79480609</p>
+
+<h2 id="7成果">7.成果</h2>
+
+<p>emm庆祝一下</p>
+
+<p><img src="https://qq849012418.github.io/images/posts/linux/2019-10-31%2001-02-38%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="2019-10-31 01-02-38 的屏幕截图" /></p>
+
+<p>万事开头难</p>
+
+<p>然后中间难</p>
+
+<p>最后结尾难</p>
+
+<p>请期待下一篇。</p>
+
+<p>Keenster，写于2019.10.29-10.31</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+  <li>https://blog.csdn.net/neptune4751/article/details/79146885”win10下制作Ubuntu16.04的U盘安装盘”</li>
+  <li>https://www.cnblogs.com/lemos/p/8297071.html”linux 系统全盘备份”</li>
+  <li>https://blog.csdn.net/weixin_44001854/article/details/84896333”给移动硬盘装上LINUX全攻略”</li>
+  <li>https://blog.csdn.net/qq805934132/article/details/82909759”Ubuntu禁用nouveau驱动”</li>
+</ul>
+    
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2019/10/29/ML_on_Linux_1_install_OS/',
+            clientID: '6c2b1ee2c9cb49a89ed0',
+            clientSecret: '305120a30d1782f2cf2bfe88c931769900f5598d',
+            repo: 'BlogTalk',
+            owner: 'qq849012418',
+            admin: ['qq849012418'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/modules/sidebar-search.css">
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/simple-jekyll-search.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://keenster.cn/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+
+</section>
+<!-- /section.content -->
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.5.3/dist/av-min.js"></script>
+    <script>
+    AV.init({
+    appId: "rjTl2bympW4UOMkIS485rNvf-9Nh9j0Va",
+    appKey: "1Qzjy14qipXFCRcbSMoRXUuh",
+    serverURL: "http://keenster.cn"
+    });
+    var name='Counter';
+
+    function createRecord(Counter){
+      // 设置 ACL
+      var acl = new AV.ACL();
+      acl.setPublicReadAccess(true);
+      acl.setPublicWriteAccess(true);
+      // 获得span的所有元素
+      var elements=document.getElementsByClassName('leancloud_visitors');
+      // 一次创建多条记录
+      var allcounter=[];
+      for (var i = 0; i < elements.length ; i++) {
+        // 若某span的内容不包括 '-' ，则不必创建记录
+        if(elements[i].textContent.indexOf('-') == -1){
+          continue;
+        }
+        var title = elements[i].getAttribute('data-flag-title');
+        var url = elements[i].id;
+
+        var newcounter = new Counter();
+        newcounter.setACL(acl);
+        newcounter.set("title", title);
+        newcounter.set("url", url);
+        newcounter.set("time", 0);
+
+        allcounter.push(newcounter);
+        // 顺便更新显示span为默认值0
+        elements[i].textContent=0;
+      }
+
+      AV.Object.saveAll(allcounter).then(function (todo) {
+        // 成功保存记录之后
+        console.log('创建记录成功！');
+      }, function (error) {
+        // 异常错误 
+        console.error('创建记录失败: ' + error.message);
+      });
+    }
+
+    function showCount(Counter){
+      // 是否需要创建新纪录的标志（添加一篇新文章）
+      var flag=false;
+      var query = new AV.Query(name);
+      query.greaterThanOrEqualTo('time', 0);
+      query.find().then(function (results) {
+        // 当获取到的记录为0时置默认值
+        if(results.length==0){
+          $('.leancloud_visitors').text('-');
+          flag=true;
+          console.log('返回查询记录为空');
+          // 如果获取到空记录就创建新记录
+          createRecord(Counter);
+          return;
+        }
+        // 将获取到的数据设置为text
+        for (var i = 0; i < results.length; i++) {
+          var item = results[i];
+          var url = item.get('url');
+          var time = item.get('time');
+          var element = document.getElementById(url);
+          element.textContent = time;
+        }
+        // 当某个span含有默认值时说明需要创建记录
+        if($('.leancloud_visitors').text().indexOf("-") != -1){
+          flag=true;
+        }
+        // 当获取的记录数与span个数不吻合时
+        if(results.length != $('.leancloud_visitors').length){
+          flag=true;
+        }
+        if(flag){
+          createRecord(Counter);
+        }
+      }, function (error) {
+        console.log('query error:'+error.message);
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend(name);
+      showCount(Counter);
+    });
+    </script>
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2019-2020
+                    <span title="Keenster">Keenster</span>
+
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/qq849012418/qq849012418.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://keenster.cn/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://keenster.cn/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://keenster.cn/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/geopattern.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-156339178-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
+
