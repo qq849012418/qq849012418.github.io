@@ -1,6 +1,6 @@
 .home .banner,
 .home .site-header {
-    background-image:url('https://github.com/zfb132/zfb132.github.com/blob/master/img/home-bg.jpg?raw=true');
+    background-image:{{ site.cdnurl }}/assets/images/home-bg.jpg;
     /*background: #4183c4;*/
     color: #fff
 }
