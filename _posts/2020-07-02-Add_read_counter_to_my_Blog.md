@@ -57,7 +57,7 @@ keywords: blog,  busuanzi
 
 把这个html在任何其他html页面引用的格式为
 
-"{% include visit-stat.html %}"
+![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/20200702140001.png)
 
 
 ## 效果
