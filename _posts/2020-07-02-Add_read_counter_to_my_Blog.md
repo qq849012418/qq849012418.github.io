@@ -1,10 +1,12 @@
+---
 layout: post
 title: 使用不蒜子为博客增加访客统计+浏览统计
 categories:  Blog
 description: none
 keywords: blog,  busuanzi
+---
 
-一个小DEMO，实现了客户端向服务端请求文件，服务端循环发送文件，客户端接收存储的功能。
+非常良心的免费计数器。
 
 ------
 
