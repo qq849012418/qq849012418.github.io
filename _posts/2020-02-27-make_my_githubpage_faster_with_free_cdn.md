@@ -2,7 +2,7 @@
 
 layout: post
 title: 使用星空CDN和JSDelivr CDN对GithubPage未备案.cn域名进行全站加速
-categories:  [Net, Tools]
+categories:  [Net, Tools, Blog]
 description: none
 keywords: github page, keenster.cn, http
 ---
