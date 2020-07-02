@@ -62,7 +62,7 @@ clientID: clientSecret:填上面oauthapp获得的号
 在_include文件夹下新建一个comments.html的文件，这里仅贴出gitalk相关的部分。使用html可以方便您修改好格式后引入到任何页面中。这里的css目录因为本人使用了cdn加速（防止远程地址更换），所以地址如下，普通使用的话改成<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">即可
 
 ```html
-{% when 'gitalk' %}
+
         <div id="gitalk-container"></div>
         <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"> -->
         <link rel="stylesheet" href="{{ site.cdnurl }}/assets/vendor/gitalk/gitalk.css">
@@ -80,7 +80,7 @@ clientID: clientSecret:填上面oauthapp获得的号
         });
         gitalk.render('gitalk-container');
         </script>
-  {% endcase %}
+
 ```
 
 把这个html在任何其他html页面引用的格式为

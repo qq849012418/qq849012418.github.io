@@ -88,7 +88,6 @@ repository: qq849012418/qq849012418.github.io
 # 文章字数统计
 word_count:
     enabled: true
-    
 # ---------------- #
 #      Comments    #
 # ---------------- #
