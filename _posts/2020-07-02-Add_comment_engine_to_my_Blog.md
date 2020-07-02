@@ -36,6 +36,8 @@ Gitalk 是一个基于 GitHub Issue 和 Preact 开发的评论插件。
 为了防止后期的401错误，配置oAuth的时候Authorization callback URL要你博客打开的url，要干净的域名比如我下图所示的，最后面删掉/
 owner要正确
 
+（20200702更新-建议使用https格式访问博客，否则有时会报network error）
+
 ![](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/20200702125130.png)
 
 新建完成后大概是这个样子
