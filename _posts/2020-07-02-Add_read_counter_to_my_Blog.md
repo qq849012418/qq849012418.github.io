@@ -57,9 +57,8 @@ keywords: blog,  busuanzi
 
 把这个html在任何其他html页面引用的格式为
 
-```html
 {% include visit-stat.html %}
-```
+
 
 ## 效果
 

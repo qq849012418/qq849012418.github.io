@@ -85,7 +85,7 @@ clientID: clientSecret:填上面oauthapp获得的号
 
 把这个html在任何其他html页面引用的格式为
 
-```html
+```shell
 <div class="comment">
    {% include comments.html %}
 </div>
