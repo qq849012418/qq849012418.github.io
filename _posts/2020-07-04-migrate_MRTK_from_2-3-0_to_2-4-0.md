@@ -1,7 +1,7 @@
 ---
 layout: post
-title: [Hololoen2 MRTK开发]升级MRTK2.3.0到2.4.0
-categories:  AR, Hololens2
+title: 【Hololoen2 MRTK开发】升级MRTK2.3.0到2.4.0
+categories:  [AR, Hololens2]
 description: none
 keywords: Unity,  mixed reality toolkit
 ---
