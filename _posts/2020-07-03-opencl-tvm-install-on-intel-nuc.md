@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 在Intel NUC上配置opencl+TVM并与TensorRT进行运行速度对比（ResNet50）
+title: 【WIP】在Intel NUC上配置opencl+TVM并与TensorRT进行运行速度对比（ResNet50）
 categories:  AI
 description: none
 keywords: tvm,  trt
@@ -23,6 +23,7 @@ keywords: tvm,  trt
 - [tvm官网doc](https://tvm.apache.org/docs/index.html)
 - [TVM初体验及其性能简单测试](https://zhuanlan.zhihu.com/p/88369758)
 - [Ubuntu 16.04.2 下为 Intel 显卡启用 OpenCL](https://www.linuxidc.com/Linux/2017-03/141455.htm)
+- [Intel官方github-NEO OPENCL](https://github.com/intel/compute-runtime/blob/master/opencl/doc/DISTRIBUTIONS.md)
 
 ### 测试
 
@@ -37,7 +38,10 @@ sudo apt install ocl-icd-libopencl1
 sudo apt install opencl-headers
 sudo apt install clinfo
 sudo apt install ocl-icd-opencl-dev
-sudo apt install beignet
+#sudo apt install beignet
+sudo add-apt-repository ppa:intel-opencl/intel-opencl
+sudo apt update
+sudo apt install intel-opencl-icd
 ```
 
 ### tvm
@@ -143,13 +147,11 @@ mod, params = relay.frontend.from_pytorch(scripted_model,
 # Relay Build
 # -----------
 # Compile the graph to llvm target with given input specification.
-target = 'llvm'
-target_host = 'llvm'
-ctx = tvm.cpu(0)
+target = 'opencl'
+ctx = tvm.opencl()
 with tvm.transform.PassContext(opt_level=3):
     graph, lib, params = relay.build(mod,
                                      target=target,
-                                     target_host=target_host,
                                      params=params)
 
 ######################################################################
@@ -221,6 +223,8 @@ print('>>Torch cost %.2f ms' %
 
 ![image-20200703123952179](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/image-20200703123952179.png)
 
+这个速度貌似是不对的，由于还没有加auto tune
+
 TRT端
 
 在trt安装目录下的bin目录中打开终端，执行
@@ -231,4 +235,4 @@ TRT端
 
 ![2020-07-03 20-27-33 的屏幕截图](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/2020-07-03 20-27-33 的屏幕截图.png)
 
-差距有点大，看起来可能和硬件配置也有很大关系(
+差距有点大，分析原因中
