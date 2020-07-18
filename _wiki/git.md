@@ -9,7 +9,7 @@ keywords: Git, 版本控制
 ## 常用命令
 
 | 功能                      | 命令                                  |
-|:--------------------------|:--------------------------------------|
+| :------------------------ | :------------------------------------ |
 | 添加文件/更改到暂存区     | git add filename                      |
 | 添加所有文件/更改到暂存区 | git add .                             |
 | 提交                      | git commit -m msg                     |
@@ -23,7 +23,7 @@ keywords: Git, 版本控制
 | 从暂存区移除文件          | git reset HEAD filename               |
 | 查看本地远程仓库配置      | git remote -v                         |
 | 回滚                      | git reset --hard 提交SHA              |
-| 强制推送到远程仓库        | git push -f origin master             |
+| 强制推送到远程仓库        | git push origin 分支名 --force        |
 | 修改上次 commit           | git commit --amend                    |
 | 推送 tags 到远程仓库      | git push --tags                       |
 | 推送单个 tag 到远程仓库   | git push origin [tagname]             |
