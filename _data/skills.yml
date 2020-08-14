@@ -1,19 +1,28 @@
-- name: Software Engineer Keywords
+- name: 虚拟&增强现实
   keywords:
-      - Java
-      - C++
-      - Python
-      - Design Patterns
+      - Hololens 2
+      - MRTK
+      - Vuforia
+      - EasyAR
+      - ARTK
+      - LeapMotion
+      - Unity
+      - CSharp
 
-- name: Mobile Developer Keywords
+- name: 嵌入式&机器人
+  keywords:
+      - STM32
+      - ROS Melodic
+      - Linux
+
+- name: 三维视觉&图像处理
+  keywords:
+      - OpenCV
+      - Machine Learning
+      - Cplusplus
+      - Python
+
+- name: 移动端应用
   keywords:
       - Android
-      - Reverse Engineering
-
-- name: Windows Developer Keywords
-  keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
+      - Java
