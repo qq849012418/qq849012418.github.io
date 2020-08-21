@@ -43,3 +43,20 @@ rosdep install -y --from-paths src --ignore-src --rosdistro melodic -r --os=debi
 ```
 
 顺利完成安装，roscore测试也没问题！
+
+#### 后续
+
+第二天测试action节点的时候catkin_make出了问题——Comm版好像默认只有message和service
+
+需要在这两个地方下载actionlib相关的包
+
+https://github.com/ros/common_msgs/tree/noetic-devel/actionlib_msgs
+
+https://github.com/ros/actionlib
+
+在catkin_make之前，可输入这个加快速度（因为默认只用2或者4线运行）
+
+```sh
+export ROS_PARALLEL_JOBS='-j8 -l8'
+```
+
