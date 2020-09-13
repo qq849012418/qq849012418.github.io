@@ -16,6 +16,7 @@ keywords: 碰撞检测, 三角面片
 - [Unity 代码生成mesh要点总结](https://blog.csdn.net/qq_39185530/article/details/89518262)
 - [Unity3D 动态创建Mesh（一）](https://www.cnblogs.com/kyokuhuang/p/4191169.html)
 - [Unity3D中使用mesh collider和box collider的区别](https://blog.csdn.net/qq_36991505/article/details/91516409)
+- [unity-射线拾取物体的三角面片+显示碰撞点的坐标](https://www.pianshen.com/article/3847739271/)
 
 ## 前置知识
 
@@ -75,6 +76,8 @@ public void BuildMesh(string pointPath,string triPath)
     }
 ```
 
+![image-20200913175341619](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/image-20200913175341619.png)
+
 ## 射线检测类
 
 ```c#
@@ -127,5 +130,6 @@ public class RayMeshCollision : MonoBehaviour
 }
 ```
 
+![image-20200913175404150](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/image-20200913175404150.png)
 
-
+速度还是可以的。
