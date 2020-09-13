@@ -6,7 +6,7 @@ description: none
 keywords: 西瓜书, ml
 ---
 
-全民皆AI的时代，不前进，就要被抛弃。
+Keenster的ML理论基础入门，持续更新中。
 
 ------
 ##### 公式推导参考资料
