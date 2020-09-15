@@ -32,7 +32,7 @@ MeshFilter含有一个Public成员 Mesh。
 
 这就决定了，如果我们需要渲染如下一个正方形面，那么就需要保证组成这个正方形的两个小三角形的正面法线都是**指向屏幕外**的。
 
-![img](https://images0.cnblogs.com/blog/707625/201412/291120353411053.png)
+![img](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/291120353411053.png)
 
 在程序中的顶点顺序为，三角形1: 0->3->1，三角形2: 0->2->3 。
 
