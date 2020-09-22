@@ -61,3 +61,18 @@ git checkout release/1.1.0
 
 然后就不报错了，基本配置完成
 
+
+
+
+
+IIS配置
+
+https://blog.csdn.net/weixin_34260991/article/details/85844138
+
+https://www.cnblogs.com/windowsphones/p/9842079.html
+
+https://www.pianshen.com/article/5024102909/
+
+https://blog.csdn.net/sleeper1982/article/details/40978549
+
+https://blog.csdn.net/liamzhu/article/details/79205394
