@@ -49,3 +49,14 @@ export ALL_PROXY=socks5://127.0.0.1:xxxx（软件中查看的端口号）
 
 再`source ~/.bashrc`，即可实现终端走代理。
 
+### 3.无效情况
+
+对于部分网址，挂了代理依旧连不上，视情况特殊对待。
+
+比如`raw.githubusercontent.com`，亲测无效，上不去，在配置ROS的时候还是必须的。因此可以使用修改hosts的方案：在/etc/hosts中新增
+
+```
+151.101.84.133  raw.githubusercontent.com
+```
+
+又如`s3.amazonaws.com`，网上说的改hosts的方法也亲测无效，但在配置realsense sdk的时候是必须的。最终使用手机流量+usb网络共享解决。
