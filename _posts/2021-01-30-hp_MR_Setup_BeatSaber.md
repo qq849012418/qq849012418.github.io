@@ -18,7 +18,7 @@ keywords: HP, BS
 
 驱动安装完后会弹出HP的介绍界面，此时可以开启控制器，把电池后盖打开，长按下方的触点，打开蓝牙配对模式，在电脑端将蓝牙打开，与之配对。其他的设置跟提示即可。
 
-![IMG_20210130_161649](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/IMG_20210130_161649.jpg)
+![image-20210130181119445](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/image-20210130181119445.png)
 
 ![image-20210130180704393](https://keenster-1300019754.cos.ap-shanghai-fsi.myqcloud.com/image-20210130180704393.png)
 
