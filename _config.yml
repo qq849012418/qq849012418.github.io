@@ -6,8 +6,8 @@ url: http://keenster.cn
 cdnurl: https://cdn.jsdelivr.net/gh/qq849012418/qq849012418.github.io
 date_format: "ordinal"
 title: KEENSTER.CN
-subtitle: "只争朝夕，不负韶华"
-description: "锦阁的个人博客"
+subtitle: "致广大而尽精微"
+description: "Keenster的个人博客"
 keywords: Steven Wong, Keenster, Minazuki, qq849012418, 水无月
 timezone: Asia/Shanghai
 encoding: "utf-8"
@@ -17,10 +17,10 @@ side_bar_repo_limit: 5
 #      Author      #
 # ---------------- #
 author: Keenster
-organization: SJTU
+organization: XJTU/SJTU/PKU
 organization_url: https://qq849012418.github.io/
 github_username: qq849012418
-location: Shanghai, China
+location: Beijing, China
 email: MinazukiCn@qq.com
 
 # ---------------- #
