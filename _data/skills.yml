@@ -1,24 +1,26 @@
-- name: 虚拟&增强现实
+- name: 拓展现实
   keywords:
       - Hololens 2
-      - MRTK
-      - Vuforia
-      - EasyAR
-      - ARTK
+      - RealSense
+      - ZED Mini
+      - Oculus
       - LeapMotion
       - Unity
       - CSharp
 
-- name: 嵌入式&机器人
+- name: 嵌入式开发
   keywords:
       - STM32
-      - ROS Melodic
+      - ROS
       - Linux
 
-- name: 三维视觉&图像处理
+- name: 三维视觉
   keywords:
-      - OpenCV
-      - Machine Learning
+      - Tracking
+      - Registration
+      - Segmentation
+      - Reconstruction
+      - Medical image analysis
       - Cplusplus
       - Python
 
